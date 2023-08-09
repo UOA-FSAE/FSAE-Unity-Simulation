@@ -24,6 +24,7 @@ public class CarController : MonoBehaviour {
     
 
     public string carName;
+    public bool enableDebug;
     [SerializeField] private float currentSetThrottle = 0f;
     [SerializeField] private float currentSetSteeringAngle = 0f;
 
