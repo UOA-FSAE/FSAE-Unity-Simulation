@@ -12,6 +12,7 @@ public class AxleInfo {
 }
 
 [RequireComponent(typeof(ActionNode))]
+[RequireComponent(typeof(LidarNode))]
 [RequireComponent(typeof(Rigidbody))]
 public class CarController : MonoBehaviour {
     /* TODO!: List of things need to be done for the Car to be finished
@@ -31,6 +32,7 @@ public class CarController : MonoBehaviour {
     public float maxSteeringAngle; // maximum steer angle the wheel can have
 
     private ActionNode actionNode;
+    private LidarNode lidarNode;
     
     public void FixedUpdate() {
 
@@ -52,6 +54,10 @@ public class CarController : MonoBehaviour {
         actionNode = GetComponent<ActionNode>();
         actionNode.Config();
         actionNode.spin_up();
+        
+        lidarNode = GetComponent<LidarNode>();
+        lidarNode.Config();
+        lidarNode.spin_up();
     }
 
     public bool SetCurrentSetThrottle(float newSetThrottle) {

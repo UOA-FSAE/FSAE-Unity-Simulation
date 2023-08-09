@@ -6,3 +6,9 @@ Logs/
 FSAE-Unity-Simulation.sln
 
 Assembly-CSharp.csproj
+
+.idea/
+
+obj/
+
+UserSettings/

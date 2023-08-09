@@ -10,8 +10,9 @@ GameObject:
   m_Component:
   - component: {fileID: 6163464744446917164}
   - component: {fileID: 484012856360669799}
-  - component: {fileID: 8635184722362411511}
   - component: {fileID: 4447817566309740254}
+  - component: {fileID: 8635184722362411511}
+  - component: {fileID: 6536841009737597428}
   m_Layer: 0
   m_Name: CarPrefab
   m_TagString: Untagged
@@ -64,18 +65,6 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!114 &8635184722362411511
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 615475439377722876}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ba32c0bf5d8248bb897c72075aef001d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &4447817566309740254
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -102,6 +91,30 @@ MonoBehaviour:
     steering: 0
   maxMotorTorque: 400
   maxSteeringAngle: 30
+--- !u!114 &8635184722362411511
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 615475439377722876}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ba32c0bf5d8248bb897c72075aef001d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &6536841009737597428
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 615475439377722876}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f91329eec031f1a50832c20712d14b22, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &2420507645707866090
 GameObject:
   m_ObjectHideFlags: 0
@@ -404,7 +417,7 @@ AudioListener:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4812431284031095945}
-  m_Enabled: 1
+  m_Enabled: 0
 --- !u!1 &5404432300915831589
 GameObject:
   m_ObjectHideFlags: 0
