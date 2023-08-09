@@ -5,6 +5,7 @@ using System.Linq;
 using UnityEngine;
 using ROS2;
 using sensor_msgs.msg;
+using Unity.VisualScripting;
 using UnitySensors;
 
 [RequireComponent(typeof(CarController))]
@@ -13,7 +14,7 @@ public class LidarNode : MonoBehaviour {
     public sensor_msgs.msg.LaserScan laserScanMsg = new LaserScan();
 
     // Configs
-    public int lidarRadius;
+    public int lidarRadius; //TODO!: Setup it so that no matter the density of lidar points it still does the correct Radius in deg
     
     // Internals
     private CarController carController;
@@ -48,7 +49,7 @@ public class LidarNode : MonoBehaviour {
 
     private void Update() {
         // lidar calculations
-        if (!velodyneSensor) return;
+        if (!velodyneSensor) return;    // TODO!: Should crash / send debug message when can't find
         
         velodyneSensor.CompleteJob();
 
@@ -59,7 +60,6 @@ public class LidarNode : MonoBehaviour {
             if (ranges[idx] < 1f)
                 ranges[idx] = float.PositiveInfinity;
 
-        laserScanMsg = new LaserScan();
         laserScanMsg.Ranges = ranges;
         publisherLidarLaserScan.Publish(laserScanMsg);
         
@@ -75,7 +75,7 @@ public class LidarNode : MonoBehaviour {
         foreach (var point in points) {
             Debug.DrawLine(
                 sensorPosition,
-                point + sensorPosition,
+                velodyneSensor.transform.rotation * point + sensorPosition,
                 Color.green,
                 0.001f
             );
