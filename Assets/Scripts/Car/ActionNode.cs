@@ -14,6 +14,7 @@ public class ActionNode : MonoBehaviour {
     private ROS2Node ros2Node;
     private ISubscription<std_msgs.msg.Float32> subscriptionCmdThrottle;
     private ISubscription<std_msgs.msg.Float32> subscriptionCmdSteering;
+    private ISubscription<std_msgs.msg.Bool> subscriptionReadyUp;
 
     public bool Config() {
         carController = GetComponent<CarController>();
@@ -35,6 +36,10 @@ public class ActionNode : MonoBehaviour {
             $"{carController.carName}/cmd_steering",
             steering_callback
         );
+        subscriptionCmdSteering = ros2Node.CreateSubscription<std_msgs.msg.Float32>(
+            $"{carController.carName}/cmd_steering",
+            steering_callback
+        );
         
         return true;
     }
@@ -45,5 +50,9 @@ public class ActionNode : MonoBehaviour {
     
     void steering_callback(std_msgs.msg.Float32 msg) {
         carController.SetCurrentSetSteeringAngle(msg.Data);
+    }
+
+    void readyup_callback(std_msgs.msg.Bool msg) {
+        carController.isReady = msg.Data;
     }
 }
