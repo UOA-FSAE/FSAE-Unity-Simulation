@@ -42,7 +42,7 @@ public class LidarNode : MonoBehaviour {
         
         ros2Node = ros2UnityCore.CreateNode($"{carController.carName}LidarNode");
         publisherLidarLaserScan =
-            ros2Node.CreatePublisher<sensor_msgs.msg.LaserScan>($"{carController.carName}/LaserScan");
+            ros2Node.CreateSensorPublisher<sensor_msgs.msg.LaserScan>($"{carController.carName}/LaserScan");
 
         return true;
     }

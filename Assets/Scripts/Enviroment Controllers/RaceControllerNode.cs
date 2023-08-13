@@ -5,39 +5,41 @@ using UnityEngine;
 
 namespace Enviroment_Controllers {
     public class RaceControllerNode : MonoBehaviour {
+        private RaceController raceController;
+        
         // ROS2
         private ROS2UnityCore ros2UnityCore = new ROS2UnityCore();
         private ROS2Node ros2Node;
-        private List<IPublisher<Message>> publisherTopics = new List<IPublisher<Message>>();
-        
+        private ISubscription<std_msgs.msg.String> subscriptionCarCreate;
         
         public bool Config() {
+            raceController = GetComponent<RaceController>();
+            
             return true;
         }
     
-        public bool spin_up() {
+        public bool SpinUp() {
             if (!ros2UnityCore.Ok()) {
                 Debug.Log($"RaceControllerNode has failed to find to Ros2 Core");
                 return false;
             }
         
             ros2Node = ros2UnityCore.CreateNode($"RaceControllerNode");
-            publisherLidarLaserScan =
-                ros2Node.CreatePublisher<sensor_msgs.msg.LaserScan>($"{carController.carName}/LaserScan");
+            
+            
+            subscriptionCarCreate = ros2Node.CreateSubscription<std_msgs.msg.String>(
+                $"race_control/request_car",
+                RequestCarCallback
+            );
 
             return true;
         }
+
+        private void RequestCarCallback(std_msgs.msg.String msg) {
+            raceController.CreateNewCar(msg.Data);
+        }
         
         public void PublishRaceStart() {
-            // TODO!
-            throw new NotImplementedException();
-        }
-
-        public void CreateTopic(string topic, Type msgType) {
-            publisherTopics.Add(ros2Node.CreatePublisher<msgType>());
-        }
-        
-        public void PublishMessage(string topic, Message msg) {
             // TODO!
             throw new NotImplementedException();
         }
