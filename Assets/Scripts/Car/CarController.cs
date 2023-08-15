@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Car;
 using UnityEngine;
 
 [System.Serializable]
@@ -13,6 +14,7 @@ public class AxleInfo {
 
 [RequireComponent(typeof(ActionNode))]
 [RequireComponent(typeof(LidarNode))]
+[RequireComponent(typeof(IMUNode))]
 [RequireComponent(typeof(Rigidbody))]
 public class CarController : MonoBehaviour {
     /* TODO!: List of things need to be done for the Car to be finished
@@ -35,6 +37,7 @@ public class CarController : MonoBehaviour {
 
     private ActionNode actionNode;
     private LidarNode lidarNode;
+    private IMUNode imuNode;
     
     public void FixedUpdate() {
 
@@ -63,6 +66,10 @@ public class CarController : MonoBehaviour {
         lidarNode = GetComponent<LidarNode>();
         lidarNode.Config();
         lidarNode.spin_up();
+
+        imuNode = GetComponent<IMUNode>();
+        imuNode.Config();
+        imuNode.SpinUp();
     }
 
     public bool SetCurrentSetThrottle(float newSetThrottle) {

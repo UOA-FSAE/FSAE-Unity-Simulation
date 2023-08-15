@@ -19,6 +19,7 @@ namespace Enviroment_Controllers {
         
         public abstract void ResetRace();
         public abstract void CreateNewCar(string nameOfCar);
+        public abstract void ResetCar(string carName);
 
         private void Update() {
             if (!hasRaceStarted) StartRaceIfReady();
@@ -44,6 +45,7 @@ namespace Enviroment_Controllers {
         public CarStats[] GetAllCarStats() {
             return carsInSimulationInstances.Select(carInstance => GetCarStats(carInstance.carName)).ToArray();
         }
+
     }
 
     public abstract class CarStats {
