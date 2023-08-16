@@ -379,8 +379,7 @@ public class SplineCreatorEditor : Editor
                     {
                         //Draw the start and end control point
                         Handles.color = (i != 0) ? Color.blue : Color.black;
-                        Vector3 newPos = Handles.FreeMoveHandle(unApplliedControlPoints[i],
-                                                                Quaternion.identity, 8f, Vector3.zero,
+                        var fmh_383_65_638278197006332645 = Quaternion.identity; Vector3 newPos = Handles.FreeMoveHandle(unApplliedControlPoints[i], 8f, Vector3.zero,
                                                                 Handles.CylinderHandleCap);
                         //if newPos is not the same as the control point on the spline 
                         if (sc.Spline.ControlPoints[i] != newPos)
@@ -390,8 +389,7 @@ public class SplineCreatorEditor : Editor
                             //set unApplliedControlPoints[i] to newPos
                             unApplliedControlPoints[i] = newPos;
                         }
-                        newPos = Handles.FreeMoveHandle(unApplliedControlPoints[i + 2],
-                                                                Quaternion.identity, 8f, Vector3.zero,
+                        var fmh_394_65_638278197006349558 = Quaternion.identity; newPos = Handles.FreeMoveHandle(unApplliedControlPoints[i + 2], 8f, Vector3.zero,
                                                                 Handles.CylinderHandleCap);
                         //if newPos is not the same as the control point on the spline 
                         if (sc.Spline.ControlPoints[i + 2] != newPos)
@@ -404,8 +402,7 @@ public class SplineCreatorEditor : Editor
 
                         //Draw the site point
                         Handles.color = Color.red;
-                        newPos = Handles.FreeMoveHandle(unApplliedControlPoints[i + 1],
-                                                                Quaternion.identity, 8f, Vector3.zero,
+                        var fmh_408_65_638278197006351384 = Quaternion.identity; newPos = Handles.FreeMoveHandle(unApplliedControlPoints[i + 1], 8f, Vector3.zero,
                                                                 Handles.CylinderHandleCap);
                         //if newPos is not the same as the control point on the spline 
                         if (sc.Spline.ControlPoints[i + 1] != newPos)
@@ -432,8 +429,7 @@ public class SplineCreatorEditor : Editor
                     {
                         //Draw the start and end control point
                         Handles.color = Color.red;
-                        Vector3 newPos = Handles.FreeMoveHandle(unApplliedControlPoints[i],
-                                                                Quaternion.identity, 8f, Vector3.zero,
+                        var fmh_436_65_638278197006353171 = Quaternion.identity; Vector3 newPos = Handles.FreeMoveHandle(unApplliedControlPoints[i], 8f, Vector3.zero,
                                                                 Handles.CylinderHandleCap);
                         //if newPos is not the same as the control point on the spline 
                         if (sc.Spline.ControlPoints[i] != newPos)
