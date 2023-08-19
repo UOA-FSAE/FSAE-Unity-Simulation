@@ -23,15 +23,10 @@ public class CarGoalController : RaceController {
     }
 
     public override void CreateNewCar(string nameOfCar) {
-        nameOfCarsToBeMade.Add(nameOfCar);
+        carCreateQueue.Enqueue(nameOfCar);
     }
 
     public override void ResetCar(string carName) {
         throw new NotImplementedException();
     }
-}
-
-public class CarGoalStats : CarStats {
-    public Vector3 currentPosition;
-    public float distanceToGoal;
 }

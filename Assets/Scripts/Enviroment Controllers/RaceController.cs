@@ -6,29 +6,27 @@ using UnityEngine;
 
 namespace Enviroment_Controllers {
     [RequireComponent(typeof(RaceControllerNode))]
+    [RequireComponent(typeof(TrackController))]
     public abstract class RaceController : MonoBehaviour{
         public int numberOfCars;
         public bool hasRaceStarted = false;
         public CarConfig carConfig;
         public CarController carPrefab;
         public List<CarController> carsInSimulationInstances;
-        protected List<string> nameOfCarsToBeMade = new List<string>();
+        protected Queue<string> carCreateQueue = new Queue<string>();
         
         // ROS2
         protected RaceControllerNode raceControllerNode;
         
-        public abstract void ResetRace();
-        public abstract void CreateNewCar(string nameOfCar);
-        public abstract void ResetCar(string carName);
+        public void ResetRace();
+        
+        public void ResetCar(string carName);
 
         private void Update() {
             if (!hasRaceStarted) StartRaceIfReady();
 
-            if (nameOfCarsToBeMade.Count > 0) {
-                CarController carInstance = Instantiate(carPrefab) as CarController;
-                carInstance.carName = nameOfCarsToBeMade[0];
-                nameOfCarsToBeMade.RemoveAt(0);
-                carsInSimulationInstances.Add(carInstance);
+            if (carCreateQueue.Count > 0) {
+                CreateNewCar(carCreateQueue.Dequeue());
             }
         }
 
@@ -44,6 +42,10 @@ namespace Enviroment_Controllers {
 
         public CarStats[] GetAllCarStats() {
             return carsInSimulationInstances.Select(carInstance => GetCarStats(carInstance.carName)).ToArray();
+        }
+        
+        public void CreateNewCar(string nameOfCar) {
+            CarController carController = Instantiate(carPrefab)
         }
 
     }
