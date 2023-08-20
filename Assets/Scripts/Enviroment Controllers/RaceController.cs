@@ -17,10 +17,16 @@ namespace Enviroment_Controllers {
         
         // ROS2
         protected RaceControllerNode raceControllerNode;
-        
-        public void ResetRace();
-        
-        public void ResetCar(string carName);
+
+        public void ResetRace() {
+            // TODO!
+            throw new NotImplementedException();
+        }
+
+        public void ResetCar(string carName) {
+            // TODO!
+            throw new NotImplementedException();
+        }
 
         private void Update() {
             if (!hasRaceStarted) StartRaceIfReady();
@@ -45,7 +51,7 @@ namespace Enviroment_Controllers {
         }
         
         public void CreateNewCar(string nameOfCar) {
-            CarController carController = Instantiate(carPrefab)
+            CarController carController = Instantiate(carPrefab);
         }
 
     }

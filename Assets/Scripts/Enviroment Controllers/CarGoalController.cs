@@ -18,15 +18,15 @@ public class CarGoalController : RaceController {
         raceControllerNode.SpinUp();
     }
 
-    public override void ResetRace() {
+    public new void ResetRace() {
         raceControllerNode.PublishRaceStart();
     }
 
-    public override void CreateNewCar(string nameOfCar) {
+    public new void CreateNewCar(string nameOfCar) {
         carCreateQueue.Enqueue(nameOfCar);
     }
 
-    public override void ResetCar(string carName) {
+    public new void ResetCar(string carName) {
         throw new NotImplementedException();
     }
 }
