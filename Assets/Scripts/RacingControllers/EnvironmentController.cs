@@ -4,13 +4,25 @@ using System.Linq;
 using UnityEngine;
 
 namespace RacingControllers {
+    
+    /*  TODO!: Create race Controller functions to reset cars and create them.
+     *  Create cars
+     *  Create cars configs
+     *  Create car stats
+     *  Create node for dealing with ros2
+     *  Fix issue with spline killing its self when its not selected in the editor
+     *  Add sim time multiplier
+     */
+    
     [RequireComponent(typeof(SplineCreator))]
     public class EnvironmentController : MonoBehaviour {
         public bool drawTrackDebugLines = false;
-        
+
+        public int trackGenerationSeed = 0;
         public float trackThickness = 5f;
         public float trackWallHeight = 10f;
         public Material trackWallMaterial;
+        public CarController carPrefab;
         
         private List<Vector3> trackPoints;
         private List<Vector3> leftEdge;
@@ -39,8 +51,20 @@ namespace RacingControllers {
 
         [ContextMenu("Create track")]
         public void CreateTrack() {
+            splineCreator.Seed = trackGenerationSeed;
+            
             GenerateTrackLines();
             CreateAndRenderWallMeshes();
+        }
+
+        [ContextMenu("Create car at start of track")]
+        public void CreateCarAtStartOfTrack() {
+            CreateCarAtPercentAroundTrack(0f);
+        }
+        
+        public void CreateCarAtPercentAroundTrack(float percentage) {
+            Vector3 position = GetPositionOnSpline(trackPoints, percentage, out var rotation);
+            Instantiate(carPrefab, position, rotation);
         }
         
         private void GenerateTrackLines() {
@@ -144,6 +168,39 @@ namespace RacingControllers {
             mesh.RecalculateNormals();
 
             return mesh;
+        }
+        private Vector3 GetPositionOnSpline(List<Vector3> spline, float percentage, out Quaternion rotation) {
+            if (spline == null || spline.Count < 2)
+            {
+                rotation = Quaternion.identity;
+                return Vector3.zero;
+            }
+
+            float totalLength = 0f;
+            for (int i = 0; i < spline.Count - 1; i++)
+            {
+                totalLength += Vector3.Distance(spline[i], spline[i + 1]);
+            }
+
+            float targetLength = totalLength * percentage;
+            float accumulatedLength = 0f;
+
+            for (int i = 0; i < spline.Count - 1; i++)
+            {
+                float segmentLength = Vector3.Distance(spline[i], spline[i + 1]);
+                if (accumulatedLength + segmentLength >= targetLength)
+                {
+                    float segmentPercentage = (targetLength - accumulatedLength) / segmentLength;
+                    Vector3 direction = (spline[i + 1] - spline[i]).normalized;
+                    rotation = Quaternion.LookRotation(direction);
+                    return Vector3.Lerp(spline[i], spline[i + 1], segmentPercentage);
+                }
+                accumulatedLength += segmentLength;
+            }
+
+            Vector3 endDirection = (spline[spline.Count - 1] - spline[spline.Count - 2]).normalized;
+            rotation = Quaternion.LookRotation(endDirection);
+            return spline[spline.Count - 1];
         }
         private static Vector3 GetCenterPoint(List<Vector3> points)
         {
@@ -290,6 +347,5 @@ namespace RacingControllers {
 
             return doubleSidedMesh;
         }
-
     }
 }
