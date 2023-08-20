@@ -16,6 +16,7 @@ namespace RacingControllers {
     [RequireComponent(typeof(SplineCreator))]
     public class EnvironmentController : MonoBehaviour {
         public bool drawTrackDebugLines;
+        public float timeScale;
 
         public int trackGenerationSeed;
         public float trackThickness = 5f;
@@ -23,6 +24,7 @@ namespace RacingControllers {
         public Material trackWallMaterial;
         public CarController carPrefab;
         public List<CarController> listOfCars;
+        
         private List<Vector3> leftEdge;
         private GameObject leftEdgeChild;
 
@@ -42,6 +44,8 @@ namespace RacingControllers {
         }
 
         private void Update() {
+            Time.timeScale = timeScale;
+            
             // Debug draw
             if (!drawTrackDebugLines) return;
             DrawSpline(trackPoints, Color.red);
