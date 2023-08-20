@@ -16,7 +16,18 @@ public class AxleInfo {
 [RequireComponent(typeof(LidarNode))]
 [RequireComponent(typeof(IMUNode))]
 [RequireComponent(typeof(Rigidbody))]
-public class CarController : MonoBehaviour {
+
+public class CarBase : MonoBehaviour
+{
+    private float update_frequency = 10; //In Hz
+}
+
+struct car_state
+{
+    
+}
+
+public class CarController : CarBase {
     /* TODO!: List of things need to be done for the Car to be finished
      * - Create Sensor node for the Lidar
      * - Create Sensor node for Odom
@@ -101,3 +112,4 @@ public class CarController : MonoBehaviour {
         visualWheel.transform.rotation = rotation;
     }
 }
+

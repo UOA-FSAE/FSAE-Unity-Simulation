@@ -44,8 +44,9 @@ namespace Enviroment_Controllers {
             return carsInSimulationInstances.Select(carInstance => GetCarStats(carInstance.carName)).ToArray();
         }
         
-        public void CreateNewCar(string nameOfCar) {
-            CarController carController = Instantiate(carPrefab)
+        public void CreateNewCar(string nameOfCar)
+        {
+            CarController carController = Instantiate(carPrefab);
         }
 
     }
