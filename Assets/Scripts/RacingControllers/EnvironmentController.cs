@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Car;
 using UnityEngine;
 
 namespace RacingControllers {
@@ -16,18 +17,18 @@ namespace RacingControllers {
     [RequireComponent(typeof(SplineCreator))]
     public class EnvironmentController : MonoBehaviour {
         public bool drawTrackDebugLines;
-        public float timeScale;
+        public float timeScale = 1;
 
         public int trackGenerationSeed;
-        public float trackThickness = 5f;
-        public float trackWallHeight = 10f;
+        public float trackThickness = 10f;
+        public float trackWallHeight = 3f;
         public Material trackWallMaterial;
         public CarController carPrefab;
+        public int numberOfCarsInSimulation;
         public List<CarController> listOfCars;
-        
+        public readonly CarQueue carCreationQueue = new();
         private List<Vector3> leftEdge;
         private GameObject leftEdgeChild;
-
         private Mesh leftEdgeWallMesh;
         private List<Vector3> rightEdge;
         private GameObject rightEdgeChild;
@@ -39,13 +40,13 @@ namespace RacingControllers {
 
         private void Start() {
             splineCreator = GetComponent<SplineCreator>();
-
-            CreateTrack();
         }
 
         private void Update() {
             Time.timeScale = timeScale;
-            
+            CreateCarFromQueue(); // This method is only expensive if a car is actually being created
+            UpdateCarsTrackProgress();
+
             // Debug draw
             if (!drawTrackDebugLines) return;
             DrawSpline(trackPoints, Color.red);
@@ -63,12 +64,32 @@ namespace RacingControllers {
 
         [ContextMenu("Create car at start of track")]
         public void CreateCarAtStartOfTrack() {
-            CreateCarAtPercentAroundTrack(0f);
+            var carConfig = new CarConfig {
+                carName = "debugCar",
+                startPercentLocation = 0f
+            };
+
+            carCreationQueue.Enqueue(carConfig);
         }
 
         public void CreateCarAtPercentAroundTrack(float percentage) {
             var position = GetPositionOnSpline(trackPoints, percentage, out var rotation);
             var car = Instantiate(carPrefab, position, rotation);
+            listOfCars.Add(car);
+        }
+
+        private void UpdateCarsTrackProgress() {
+            foreach (var car in listOfCars) car.carStats.UpdateTrackProgress(trackPoints, car.transform.position);
+        }
+
+        private void CreateCarFromQueue() {
+            if (listOfCars.Count >= numberOfCarsInSimulation) return;
+            if (carCreationQueue.Count == 0) return;
+
+            var carConfig = carCreationQueue.Dequeue();
+            var position = GetPositionOnSpline(trackPoints, carConfig.startPercentLocation, out var rotation);
+            var car = Instantiate(carPrefab, position, rotation);
+            car.Config(carConfig);
             listOfCars.Add(car);
         }
 
@@ -323,6 +344,20 @@ namespace RacingControllers {
             doubleSidedMesh.RecalculateNormals();
 
             return doubleSidedMesh;
+        }
+    }
+
+    public class CarQueue {
+        private readonly Queue<CarConfig> carCreationQueue = new();
+
+        public int Count => carCreationQueue.Count;
+
+        public void Enqueue(CarConfig carConfig) {
+            carCreationQueue.Enqueue(carConfig);
+        }
+
+        internal CarConfig Dequeue() {
+            return carCreationQueue.Dequeue();
         }
     }
 }

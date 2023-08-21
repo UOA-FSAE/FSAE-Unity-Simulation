@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -5,7 +6,7 @@ namespace Car {
     public class CarStats {
         // Car data
         public string carName;
-        private Vector3 carStartingLocation;
+        private readonly Vector3 carStartingLocation;
         public int currentLapCount;
         public Vector3 currentPosition;
         public bool isCrashed;
@@ -13,6 +14,11 @@ namespace Car {
         // Track stats
         public int position;
         public float trackProgress; // % the way around the track
+
+        public CarStats(CarConfig carConfig) {
+            carName = carConfig.carName;
+            carStartingLocation = carConfig.startLocation;
+        }
 
         public void UpdateTrackProgress(List<Vector3> trackCenterLine, Vector3 carCurrentLocation) {
             currentPosition = carCurrentLocation;
@@ -53,10 +59,17 @@ namespace Car {
 
             var progress = (distanceToClosestPoint + distanceFromStartToClosestPoint) % totalDistance;
             trackProgress = progress / totalDistance * 100f;
-            
+
             // TODO: make it so that it increases the lap count and keeps track of the time of lap
 
             trackProgress = Mathf.Clamp(trackProgress, 0, 99);
         }
+    }
+
+    [Serializable]
+    public class CarConfig {
+        public string carName;
+        public Vector3 startLocation;
+        public float startPercentLocation;
     }
 }
