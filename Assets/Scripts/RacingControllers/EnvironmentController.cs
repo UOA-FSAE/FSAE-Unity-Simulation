@@ -59,6 +59,10 @@ namespace RacingControllers {
 
             GenerateTrackLines();
             CreateAndRenderWallMeshes();
+
+            foreach (var car in listOfCars) {
+                car.carStats.SetNewTrack(trackPoints);
+            }
         }
 
         [ContextMenu("Create car at start of track")]
@@ -77,21 +81,8 @@ namespace RacingControllers {
             listOfCars.Add(car);
         }
 
-        public List<CarStats> GetAllCarStats() {
-            // TODO!: don't make function trash please fix this some one please
-            
-            var listOfCarStats = new List<CarStats>();
-            
-            foreach (var car in listOfCars) {
-                car.carStats.UpdateTrackProgress(trackPoints, car.transform.position);
-                listOfCarStats.Add(car.carStats);
-            }
-
-            return listOfCarStats;
-        }
-
         private void UpdateCarsTrackProgress() {
-            foreach (var car in listOfCars) car.carStats.UpdateTrackProgress(trackPoints, car.transform.position);
+            foreach (var car in listOfCars) car.carStats.UpdateTrackProgress();
         }
 
         private void CreateCarFromQueue() {
@@ -357,6 +348,8 @@ namespace RacingControllers {
 
             return doubleSidedMesh;
         }
+        
+        public List<CarStats> GetAllCarStats() => listOfCars.Select(car => car.carStats).ToList();
     }
 
     public class CarQueue {

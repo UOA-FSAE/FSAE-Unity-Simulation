@@ -15,12 +15,11 @@ public class AxleInfo {
 [RequireComponent(typeof(LidarNode))]
 [RequireComponent(typeof(IMUNode))]
 [RequireComponent(typeof(Rigidbody))]
+[RequireComponent(typeof(CarStats))]
 public class CarController : MonoBehaviour {
     /* TODO!: List of things need to be done for the Car to be finished
-     * - Create Sensor node for the Lidar
      * - Create Sensor node for Odom
-     * - Create Sensor node for IMU
-     * - Create Config setup for cars details
+     * - Allow for choice of diffrent types of controlle
      * */
 
 
@@ -44,6 +43,7 @@ public class CarController : MonoBehaviour {
         actionNode = GetComponent<ActionNode>();
         lidarNode = GetComponent<LidarNode>();
         imuNode = GetComponent<IMUNode>();
+        carStats = GetComponent<CarStats>();
     }
 
     private void Update() { }
@@ -71,7 +71,7 @@ public class CarController : MonoBehaviour {
     public void Config(CarConfig config) {
         carConfig = config;
 
-        carStats = new CarStats(carConfig);
+        carStats.Config(config);
 
         actionNode.Config();
         actionNode.spin_up();
