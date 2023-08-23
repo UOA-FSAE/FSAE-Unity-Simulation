@@ -10,6 +10,7 @@ namespace Car {
         public int currentLapCount;
         public Vector3 currentPosition;
         public bool isCrashed;
+        public ControllerType carControllerType;
 
         // Track stats
         public int position;
@@ -18,6 +19,7 @@ namespace Car {
         public CarStats(CarConfig carConfig) {
             carName = carConfig.carName;
             carStartingLocation = carConfig.startLocation;
+            carControllerType = carConfig.carControllerType;
         }
 
         public void UpdateTrackProgress(List<Vector3> trackCenterLine, Vector3 carCurrentLocation) {
@@ -71,5 +73,13 @@ namespace Car {
         public string carName;
         public Vector3 startLocation;
         public float startPercentLocation;
+        public ControllerType carControllerType;
+    }
+
+    public enum ControllerType {
+        ThrottleSteering,   // Throttle is % from 0 -> 100% and steering is angle
+        TorqueSteering,     // Torque is the troque requested and steering is angle
+        Ackermann,          // Ackermann steering message
+        Twist               // Twist steering message
     }
 }

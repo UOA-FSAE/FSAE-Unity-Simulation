@@ -11,7 +11,6 @@ namespace RacingControllers {
      *  Create car stats
      *  Create node for dealing with ros2
      *  Fix issue with spline killing its self when its not selected in the editor
-     *  Add sim time multiplier
      */
 
     [RequireComponent(typeof(SplineCreator))]
@@ -76,6 +75,19 @@ namespace RacingControllers {
             var position = GetPositionOnSpline(trackPoints, percentage, out var rotation);
             var car = Instantiate(carPrefab, position, rotation);
             listOfCars.Add(car);
+        }
+
+        public List<CarStats> GetAllCarStats() {
+            // TODO!: don't make function trash please fix this some one please
+            
+            var listOfCarStats = new List<CarStats>();
+            
+            foreach (var car in listOfCars) {
+                car.carStats.UpdateTrackProgress(trackPoints, car.transform.position);
+                listOfCarStats.Add(car.carStats);
+            }
+
+            return listOfCarStats;
         }
 
         private void UpdateCarsTrackProgress() {
