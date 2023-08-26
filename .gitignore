@@ -12,3 +12,9 @@ Assembly-CSharp.csproj
 obj/
 
 UserSettings/
+
+Temp/
+
+Assembly-CSharp-Editor.csproj
+
+FSAE Unity Simulation.sln
