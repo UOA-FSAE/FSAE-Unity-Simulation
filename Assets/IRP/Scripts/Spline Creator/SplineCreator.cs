@@ -27,7 +27,8 @@ public class SplineCreator : MonoBehaviour
     [SerializeField]
     private float _MeshWidthScale = 1.0f;
     public float MeshWidthScale { get { return _MeshWidthScale; } set { _MeshWidthScale = value > 0.0f ? value : 1.0f; } }
-
+    
+    
     /*
      * Curb Mesh
      */
@@ -97,6 +98,19 @@ public class SplineCreator : MonoBehaviour
      * UVs
      */
     ProMesh proMesh;
+    
+    /// <summary>
+    /// Starting sequence
+    /// </summary>
+    public void Awake()
+    {
+        //Debug.Log("Awake Runned");
+        if (Spline == null)
+        {
+            //Debug.Log("No Spline found, generate new spline object");
+            Spline = new Spline();
+        }
+    }
 
     /// <summary>
     /// Create the track
@@ -149,7 +163,6 @@ public class SplineCreator : MonoBehaviour
             * 1401185548
             * 924199008
         */
-
         Random.InitState((int)System.DateTime.Now.Ticks);
 
         //check if we need to generate a random seed
