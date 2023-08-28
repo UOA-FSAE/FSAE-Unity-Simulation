@@ -416,6 +416,9 @@ GameObject:
   - component: {fileID: 2430717870602928266}
   - component: {fileID: 2840837190849283745}
   - component: {fileID: 6857562279188824754}
+  - component: {fileID: 6622646432608870408}
+  - component: {fileID: 3017475397656057721}
+  - component: {fileID: 5135543087071786498}
   m_Layer: 0
   m_Name: F1TenthCarPrefab
   m_TagString: Untagged
@@ -483,6 +486,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   carName: test
   enableDebug: 1
+  isReady: 0
   currentSetThrottle: 0
   currentSetSteeringAngle: 0
   axleInfos:
@@ -496,6 +500,12 @@ MonoBehaviour:
     steering: 0
   maxMotorTorque: 400
   maxSteeringAngle: 30
+  carConfig:
+    carName: 
+    startLocation: {x: 0, y: 0, z: 0}
+    startPercentLocation: 0
+    carControllerType: 0
+  carStats: {fileID: 0}
 --- !u!114 &2840837190849283745
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -521,6 +531,55 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   lidarRadius: 200
+--- !u!114 &6622646432608870408
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2075330910498187650}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: de1d05f7ef764aa45be46678498c90e4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _frequency: 10
+  _position: {x: 0, y: 0, z: 0}
+  _velocity: {x: 0, y: 0, z: 0}
+  _acceleration: {x: 0, y: 0, z: 0}
+  _rotation: {x: 0, y: 0, z: 0, w: 0}
+  _angularVelocity: {x: 0, y: 0, z: 0}
+--- !u!114 &3017475397656057721
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2075330910498187650}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f8ff7464dcd275720abc16ce24b25d14, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &5135543087071786498
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2075330910498187650}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f2597492f30f4d2f9082410e5a51656e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  carName: 
+  currentLapCount: 0
+  currentPosition: {x: 0, y: 0, z: 0}
+  isCrashed: 0
+  carControllerType: 0
+  position: 0
+  trackProgress: 0
 --- !u!1 &2445654451573387996
 GameObject:
   m_ObjectHideFlags: 0
@@ -624,7 +683,7 @@ MeshCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 5
-  m_Convex: 0
+  m_Convex: 1
   m_CookingOptions: 30
   m_Mesh: {fileID: 4300002, guid: 0da0a37a38c2106489f2e4d6f7266e43, type: 3}
 --- !u!1 &4069911116460192436
@@ -730,7 +789,7 @@ MeshCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 5
-  m_Convex: 0
+  m_Convex: 1
   m_CookingOptions: 30
   m_Mesh: {fileID: 4300004, guid: 0da0a37a38c2106489f2e4d6f7266e43, type: 3}
 --- !u!1 &4144219254358136679
@@ -836,7 +895,7 @@ MeshCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 5
-  m_Convex: 0
+  m_Convex: 1
   m_CookingOptions: 30
   m_Mesh: {fileID: 4300008, guid: 0da0a37a38c2106489f2e4d6f7266e43, type: 3}
 --- !u!1 &4148856325368748140
@@ -1438,7 +1497,7 @@ MeshCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 5
-  m_Convex: 0
+  m_Convex: 1
   m_CookingOptions: 30
   m_Mesh: {fileID: 4300000, guid: 0da0a37a38c2106489f2e4d6f7266e43, type: 3}
 --- !u!1 &8234365356988986002

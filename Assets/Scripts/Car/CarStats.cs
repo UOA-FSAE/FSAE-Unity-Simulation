@@ -7,9 +7,9 @@ namespace Car {
         // Car data
         public string carName;
         private Vector3 carStartingLocation;
-        public int currentLapCount;
+        public int currentLapCount = 0;
         public Vector3 currentPosition;
-        public bool isCrashed;
+        public bool isCrashed = false;
         public ControllerType carControllerType;
         private List<Vector3> currentTrackPoints;
 

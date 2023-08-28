@@ -39,7 +39,7 @@ public class CarController : MonoBehaviour {
     private IMUNode imuNode;
     private LidarNode lidarNode;
 
-    private void Start() {
+    private void Awake() {
         actionNode = GetComponent<ActionNode>();
         lidarNode = GetComponent<LidarNode>();
         imuNode = GetComponent<IMUNode>();

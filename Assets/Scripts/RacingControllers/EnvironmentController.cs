@@ -39,6 +39,7 @@ namespace RacingControllers {
 
         private void Start() {
             splineCreator = GetComponent<SplineCreator>();
+            CreateTrack();
         }
 
         private void Update() {
