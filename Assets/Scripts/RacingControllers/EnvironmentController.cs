@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using Car;
 using UnityEngine;
+using UnityEngine.Serialization;
+using Random = UnityEngine.Random;
 
 namespace RacingControllers {
     /*  TODO!: Create race Controller functions to reset cars and create them.
@@ -18,7 +20,9 @@ namespace RacingControllers {
         public bool drawTrackDebugLines;
         public float timeScale = 1;
 
-        public int trackGenerationSeed;
+
+        public int randomSeed;
+        public int currentTrackGenerationSeed;
         public float trackThickness = 10f;
         public float trackWallHeight = 3f;
         public Material trackWallMaterial;
@@ -39,6 +43,7 @@ namespace RacingControllers {
 
         private void Start() {
             splineCreator = GetComponent<SplineCreator>();
+            Random.InitState(randomSeed);
             CreateTrack();
         }
 
@@ -54,10 +59,18 @@ namespace RacingControllers {
             DrawSpline(rightEdge, Color.green);
         }
 
-        [ContextMenu("Create track")]
-        public void CreateTrack() {
-            splineCreator.Seed = trackGenerationSeed;
+        [ContextMenu("Create track from seed")]
+        public void CreateTrackFromSeed() {
+            splineCreator.Seed = currentTrackGenerationSeed;
+            CreateTrack();
+        }
 
+        public void CreateRandomTrack() {
+            currentTrackGenerationSeed = (int)Random.Range(0f, 100f);
+            CreateTrackFromSeed();
+        }
+        
+        private void CreateTrack() {
             GenerateTrackLines();
             CreateAndRenderWallMeshes();
 
