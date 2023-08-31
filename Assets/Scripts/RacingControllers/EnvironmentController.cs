@@ -16,7 +16,7 @@ using Random = UnityEngine.Random;
 public class YamlData
 {
     public string key;
-    public int value;
+    public float value;
 }
 
 namespace RacingControllers {
