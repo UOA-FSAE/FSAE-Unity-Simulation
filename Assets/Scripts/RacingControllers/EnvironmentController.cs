@@ -3,8 +3,21 @@ using System.Collections.Generic;
 using System.Linq;
 using Car;
 using UnityEngine;
+
+using YamlDotNet.Serialization;
+using YamlDotNet.Serialization.NamingConventions;
+
 using UnityEngine.Serialization;
+using YamlDotNet.RepresentationModel;
+using System.IO;
 using Random = UnityEngine.Random;
+
+[System.Serializable]
+public class YamlData
+{
+    public string key;
+    public int value;
+}
 
 namespace RacingControllers {
     [RequireComponent(typeof(SplineCreator))]
@@ -22,6 +35,9 @@ namespace RacingControllers {
         public int numberOfCarsInSimulation;
         public List<CarController> listOfCars;
         public readonly CarQueue carCreationQueue = new();
+        public TextAsset yamlFile; // Drag the YAML file here in the inspector
+        public YamlData[] data; 
+
         private List<Vector3> leftEdge;
         private GameObject leftEdgeChild;
         private Mesh leftEdgeWallMesh;
@@ -34,9 +50,20 @@ namespace RacingControllers {
         private List<Vector3> trackPoints;
 
         private void Start() {
+            LoadYAMLFile();
+            
             splineCreator = GetComponent<SplineCreator>();
             Random.InitState(randomSeed);
             CreateTrack();
+        }
+        
+        public void LoadYAMLFile()
+        {
+            if (yamlFile != null)
+            {
+                var deserializer = new DeserializerBuilder().Build();
+                data = deserializer.Deserialize<YamlData[]>(new StringReader(yamlFile.text));
+            }
         }
 
         private void Update() {
