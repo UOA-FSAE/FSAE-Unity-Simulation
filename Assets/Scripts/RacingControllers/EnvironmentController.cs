@@ -15,8 +15,17 @@ using Random = UnityEngine.Random;
 [System.Serializable]
 public class YamlData
 {
-    public string key;
-    public float value;
+    public bool drawTrackDebugLines;
+    public float timeScale = 1;
+
+
+    public int randomSeed;
+    public int currentTrackGenerationSeed;
+    public float trackThickness = 10f;
+    public float trackWallHeight = 3f;
+    //public Material trackWallMaterial;
+    //public CarController carPrefab;
+    public int numberOfCarsInSimulation;
 }
 
 namespace RacingControllers {
