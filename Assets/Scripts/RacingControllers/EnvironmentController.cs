@@ -7,14 +7,6 @@ using UnityEngine.Serialization;
 using Random = UnityEngine.Random;
 
 namespace RacingControllers {
-    /*  TODO!: Create race Controller functions to reset cars and create them.
-     *  Create cars
-     *  Create cars configs
-     *  Create car stats
-     *  Create node for dealing with ros2
-     *  Fix issue with spline killing its self when its not selected in the editor
-     */
-
     [RequireComponent(typeof(SplineCreator))]
     public class EnvironmentController : MonoBehaviour {
         public bool drawTrackDebugLines;

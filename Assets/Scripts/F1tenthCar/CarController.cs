@@ -20,6 +20,7 @@ public class CarController : MonoBehaviour {
     /* TODO!: List of things need to be done for the Car to be finished
      * - Create Sensor node for Odom
      * - Allow for choice of diffrent types of controlle
+     * - Add collision detection function
      * */
 
 
