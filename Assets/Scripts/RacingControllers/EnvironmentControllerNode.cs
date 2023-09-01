@@ -17,6 +17,7 @@ namespace RacingControllers {
         private ROS2UnityCore ros2UnityCore = new ROS2UnityCore();
         private ROS2Node ros2Node;
         private IPublisher<ros2_msgs.msg.RaceStats> raceStatePublisher;
+        private ISubscription<std_msgs.msg.String> resetSubscription;
 
         private EnvironmentController environmentController;
 
@@ -34,6 +35,11 @@ namespace RacingControllers {
 
             ros2Node = ros2UnityCore.CreateNode("RaceController");
             raceStatePublisher = ros2Node.CreatePublisher<ros2_msgs.msg.RaceStats>("race_controller/race_stats");
+            resetSubscription = ros2Node.CreateSubscription<std_msgs.msg.String>("race_controller/reset", ResetCarCallback);
+        }
+
+        private void ResetCarCallback(std_msgs.msg.String msg) {
+            
         }
 
         private void PublishRaceState() {

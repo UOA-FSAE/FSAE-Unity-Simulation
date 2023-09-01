@@ -4,12 +4,9 @@ using System.Linq;
 using Car;
 using UnityEngine;
 
-using YamlDotNet.Serialization;
-using YamlDotNet.Serialization.NamingConventions;
-
 using UnityEngine.Serialization;
-using YamlDotNet.RepresentationModel;
 using System.IO;
+using Unity.VisualScripting.YamlDotNet.Serialization;
 using Random = UnityEngine.Random;
 
 [System.Serializable]
@@ -30,6 +27,7 @@ public class YamlData
 
 namespace RacingControllers {
     [RequireComponent(typeof(SplineCreator))]
+    [RequireComponent(typeof(EnvironmentControllerNode))]
     public class EnvironmentController : MonoBehaviour {
         public bool drawTrackDebugLines;
         public float timeScale = 1;
@@ -41,6 +39,7 @@ namespace RacingControllers {
         public float trackWallHeight = 3f;
         public Material trackWallMaterial;
         public CarController carPrefab;
+        public float carScale = 1f;
         public int numberOfCarsInSimulation;
         public List<CarController> listOfCars;
         public readonly CarQueue carCreationQueue = new();
@@ -55,18 +54,21 @@ namespace RacingControllers {
         private Mesh rightEdgeWallMesh;
 
         private SplineCreator splineCreator;
+        private EnvironmentControllerNode environmentControllerNode;
+        private Queue<string> resetCarQueue = new Queue<string>();
 
         private List<Vector3> trackPoints;
 
         private void Start() {
-            LoadYAMLFile();
+            LoadYamlFile();
             
             splineCreator = GetComponent<SplineCreator>();
+            environmentControllerNode = GetComponent<EnvironmentControllerNode>();
             Random.InitState(randomSeed);
             CreateTrack();
         }
         
-        public void LoadYAMLFile()
+        public void LoadYamlFile()
         {
             if (yamlFile != null)
             {
@@ -96,6 +98,10 @@ namespace RacingControllers {
         public void CreateRandomTrack() {
             currentTrackGenerationSeed = (int)Random.Range(0f, 100f);
             CreateTrackFromSeed();
+        }
+
+        private void ResetCar(string carName) {
+            // TODO!: Find the name of the car and then move it to the center of the track
         }
         
         private void CreateTrack() {
@@ -134,6 +140,7 @@ namespace RacingControllers {
             var carConfig = carCreationQueue.Dequeue();
             var position = GetPositionOnSpline(trackPoints, carConfig.startPercentLocation, out var rotation);
             var car = Instantiate(carPrefab, position, rotation);
+            car.transform.localScale = new Vector3(carScale, carScale, carScale);
             car.Config(carConfig);
             listOfCars.Add(car);
         }
