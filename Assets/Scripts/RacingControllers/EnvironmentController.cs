@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Car;
-using Unity.VisualScripting.YamlDotNet.Serialization;
+using YamlDotNet.Serialization;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -49,7 +49,7 @@ namespace RacingControllers {
         private List<Vector3> leftEdge;
         private GameObject leftEdgeChild;
         private Mesh leftEdgeWallMesh;
-        private Queue<string> resetCarQueue = new();
+        public Queue<string> resetCarQueue = new();
         private List<Vector3> rightEdge;
         private GameObject rightEdgeChild;
         private Mesh rightEdgeWallMesh;
@@ -70,6 +70,7 @@ namespace RacingControllers {
         private void Update() {
             Time.timeScale = timeScale;
             CreateCarFromQueue(); // This method is only expensive if a car is actually being created
+            if (resetCarQueue.Count > 0) ResetCar(resetCarQueue.Dequeue());
             UpdateCarsTrackProgress();
 
             // Debug draw
@@ -82,7 +83,7 @@ namespace RacingControllers {
         public void LoadYamlFile() {
             if (yamlFile != null) {
                 var deserializer = new DeserializerBuilder().Build();
-                data = deserializer.Deserialize<YamlData[]>(new StringReader(yamlFile.text));
+                data = deserializer.Deserialize<YamlData[]>(new StringReader(yamlFile.text).ToString());
             }
         }
 
@@ -98,7 +99,14 @@ namespace RacingControllers {
         }
 
         private void ResetCar(string carName) {
-            // TODO!: Find the name of the car and then move it to the center of the track
+            if (listOfCars.All(car => car.carName != carName)) return;  // Guard clause
+            
+            var carController = listOfCars.FirstOrDefault(car => car.name == carName)!;
+            var position = GetPositionOnSpline(trackPoints, carController.carStats.trackProgress, out var rotation);
+            
+            var transform1 = carController.transform;
+            transform1.rotation = rotation;
+            transform1.position = position;
         }
 
         private void CreateTrack() {

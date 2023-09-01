@@ -36,7 +36,9 @@ namespace RacingControllers {
             resetSubscription = ros2Node.CreateSubscription<String>("race_controller/reset", ResetCarCallback);
         }
 
-        private void ResetCarCallback(String msg) { }
+        private void ResetCarCallback(String msg) {
+            environmentController.resetCarQueue.Enqueue(msg.Data);
+        }
 
         private void PublishRaceState() {
             // TODO!: make less shit
