@@ -26,7 +26,7 @@ public class YamlData {
 
 namespace RacingControllers {
     [RequireComponent(typeof(SplineCreator))]
-    [RequireComponent(typeof(EnvironmentControllerNode))]
+    [RequireComponent(typeof(EnvironmentController))]
     public class EnvironmentController : MonoBehaviour {
         public bool drawTrackDebugLines;
         public float timeScale = 1;
