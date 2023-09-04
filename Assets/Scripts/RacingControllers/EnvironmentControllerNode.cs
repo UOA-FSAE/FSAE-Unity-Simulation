@@ -40,17 +40,20 @@ namespace RacingControllers {
             environmentController.resetCarQueue.Enqueue(msg.Data);
         }
 
-        private void PublishRaceState() {
-            // TODO!: make less shit
-            var car_stats = environmentController.GetAllCarStats();
+        private void PublishRaceState()
+        {
+            var carStats = environmentController.GetAllCarStats();
 
-            var race_stats = new RaceStats();
+            if (carStats == null) return;
 
-            race_stats.Car_num = environmentController.numberOfCarsInSimulation;
+            var raceStats = new RaceStats();
+
+            raceStats.Car_num = environmentController.numberOfCarsInSimulation;
             var listOfCarStats = new CarStats[environmentController.numberOfCarsInSimulation];
 
             var i = 0;
-            foreach (var carStat in car_stats) {
+            foreach (var carStat in carStats)
+            {
                 var carStatRosMsg = new CarStats();
 
                 carStatRosMsg.Track_progress = carStat.trackProgress;
@@ -60,8 +63,9 @@ namespace RacingControllers {
                 listOfCarStats[i++] = carStatRosMsg;
             }
 
-            race_stats.Car_stats = listOfCarStats;
-            raceStatePublisher.Publish(race_stats);
+            raceStats.Car_stats = listOfCarStats;
+            raceStatePublisher.Publish(raceStats);
         }
+
     }
 }

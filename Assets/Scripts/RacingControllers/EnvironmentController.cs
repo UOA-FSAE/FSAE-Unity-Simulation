@@ -65,6 +65,8 @@ namespace RacingControllers {
             environmentControllerNode = GetComponent<EnvironmentControllerNode>();
             Random.InitState(randomSeed);
             CreateTrack();
+            
+            environmentControllerNode.SpinUp();
         }
 
         private void Update() {
