@@ -34,9 +34,9 @@ public class CarController : MonoBehaviour {
     public float maxMotorTorque; // maximum torque the motor can apply to wheel
     public float maxSteeringAngle; // maximum steer angle the wheel can have
     [SerializeField] private CarConfig carConfig;
+    public CarStats carStats;
 
     private ActionNode actionNode;
-    public CarStats carStats;
     private IMUNode imuNode;
     private LidarNode lidarNode;
 

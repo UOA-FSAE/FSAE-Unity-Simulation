@@ -333,6 +333,7 @@ GameObject:
   - component: {fileID: 1895418215}
   - component: {fileID: 1895418217}
   - component: {fileID: 1895418216}
+  - component: {fileID: 1895418218}
   m_Layer: 0
   m_Name: Environment Controller
   m_TagString: GameController
@@ -371,13 +372,14 @@ MonoBehaviour:
   timeScale: 1
   randomSeed: 0
   currentTrackGenerationSeed: 0
-  trackThickness: 5
+  trackThickness: 10
   trackWallHeight: 3
   trackWallMaterial: {fileID: 2100000, guid: 628567cc4ac3c5628872c6a6b7651ff9, type: 2}
   carPrefab: {fileID: 2430717870602928266, guid: d2a2494c30245e5dd89f2e86d15bf09f, type: 3}
+  carScale: 1
   numberOfCarsInSimulation: 1
   listOfCars: []
-  yamlFile: {fileID: 4900000, guid: d10d6c2fb976fe5a79be45e81abd9a9d, type: 3}
+  yamlFile: {fileID: 0}
   data: []
 --- !u!114 &1895418216
 MonoBehaviour:
@@ -421,6 +423,18 @@ MonoBehaviour:
   cellCount: 0
   edgeCount: 0
   nodeCount: 0
+--- !u!114 &1895418218
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1895418213}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 43eaf92147b749ed87df86918a6e766e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &2087969204
 GameObject:
   m_ObjectHideFlags: 0

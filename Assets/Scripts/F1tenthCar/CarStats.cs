@@ -3,19 +3,19 @@ using System.Collections.Generic;
 using UnityEngine;
 
 namespace Car {
-    public class CarStats: MonoBehaviour {
+    public class CarStats : MonoBehaviour {
         // Car data
         public string carName;
-        private Vector3 carStartingLocation;
-        public int currentLapCount = 0;
+        public int currentLapCount;
         public Vector3 currentPosition;
-        public bool isCrashed = false;
+        public bool isCrashed;
         public ControllerType carControllerType;
-        private List<Vector3> currentTrackPoints;
 
         // Track stats
         public int position;
         public float trackProgress; // % the way around the track
+        private Vector3 carStartingLocation;
+        private List<Vector3> currentTrackPoints;
 
         public void Config(CarConfig carConfig) {
             carName = carConfig.carName;
@@ -82,9 +82,9 @@ namespace Car {
     }
 
     public enum ControllerType {
-        ThrottleSteering,   // Throttle is % from 0 -> 100% and steering is angle
-        TorqueSteering,     // Torque is the troque requested and steering is angle
-        Ackermann,          // Ackermann steering message
-        Twist               // Twist steering message
+        ThrottleSteering, // Throttle is % from 0 -> 100% and steering is angle
+        TorqueSteering, // Torque is the troque requested and steering is angle
+        Ackermann, // Ackermann steering message
+        Twist // Twist steering message
     }
 }

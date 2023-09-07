@@ -1,24 +1,23 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using UnityEngine;
 using ROS2;
 using ros2_msgs.msg;
+using std_msgs.msg;
+using UnityEngine;
 
 namespace RacingControllers {
     [RequireComponent(typeof(EnvironmentController))]
     public class EnvironmentControllerNode : MonoBehaviour {
+        private EnvironmentController environmentController;
+        private IPublisher<RaceStats> raceStatePublisher;
+        private ISubscription<String> resetSubscription;
+
+        private ROS2Node ros2Node;
         /*  TODO!:
          *  Add Subscriber that listens to create new cars
          *  Add Publisher to publish when race is ready to start
          */
-        
-        // ROS2
-        private ROS2UnityCore ros2UnityCore = new ROS2UnityCore();
-        private ROS2Node ros2Node;
-        private IPublisher<ros2_msgs.msg.RaceStats> raceStatePublisher;
 
-        private EnvironmentController environmentController;
+        // ROS2
+        private readonly ROS2UnityCore ros2UnityCore = new();
 
         private void Start() {
             environmentController = GetComponent<EnvironmentController>();
@@ -33,31 +32,40 @@ namespace RacingControllers {
             if (!ros2UnityCore.Ok()) return;
 
             ros2Node = ros2UnityCore.CreateNode("RaceController");
-            raceStatePublisher = ros2Node.CreatePublisher<ros2_msgs.msg.RaceStats>("race_controller/race_stats");
+            raceStatePublisher = ros2Node.CreatePublisher<RaceStats>("race_controller/race_stats");
+            resetSubscription = ros2Node.CreateSubscription<String>("race_controller/reset", ResetCarCallback);
         }
 
-        private void PublishRaceState() {
-            // TODO!: make less shit
-            var car_stats = environmentController.GetAllCarStats();
+        private void ResetCarCallback(String msg) {
+            environmentController.resetCarQueue.Enqueue(msg.Data);
+        }
 
-            var race_stats = new ros2_msgs.msg.RaceStats();
+        private void PublishRaceState()
+        {
+            var carStats = environmentController.GetAllCarStats();
 
-            race_stats.Car_num = environmentController.numberOfCarsInSimulation;
-            CarStats[] listOfCarStats = new CarStats[environmentController.numberOfCarsInSimulation];
+            if (carStats == null) return;
+
+            var raceStats = new RaceStats();
+
+            raceStats.Car_num = environmentController.numberOfCarsInSimulation;
+            var listOfCarStats = new CarStats[environmentController.numberOfCarsInSimulation];
 
             var i = 0;
-            foreach (var carStat in car_stats) {
-                var carStatRosMsg = new ros2_msgs.msg.CarStats();
-                
+            foreach (var carStat in carStats)
+            {
+                var carStatRosMsg = new CarStats();
+
                 carStatRosMsg.Track_progress = carStat.trackProgress;
                 carStatRosMsg.Car_name = carStat.carName;
                 carStatRosMsg.Is_crashed = carStat.isCrashed;
-                
+
                 listOfCarStats[i++] = carStatRosMsg;
             }
 
-            race_stats.Car_stats = listOfCarStats;
-            raceStatePublisher.Publish(race_stats);
+            raceStats.Car_stats = listOfCarStats;
+            raceStatePublisher.Publish(raceStats);
         }
+
     }
 }
