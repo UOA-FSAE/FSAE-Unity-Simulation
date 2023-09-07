@@ -1,10 +1,17 @@
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using Car;
-using YamlDotNet.Serialization;
 using UnityEngine;
+
+using YamlDotNet.Serialization;
+using YamlDotNet.Serialization.NamingConventions;
+
+using UnityEngine.Serialization;
+using YamlDotNet.RepresentationModel;
+using System.IO;
+using Unity.VisualScripting;
+using UnityEngine.UIElements;
 using Random = UnityEngine.Random;
 
 [Serializable]
@@ -16,7 +23,6 @@ public class YamlData
 
 namespace RacingControllers {
     [RequireComponent(typeof(SplineCreator))]
-    [RequireComponent(typeof(EnvironmentController))]
     public class EnvironmentController : MonoBehaviour {
         public bool drawTrackDebugLines;
         public float timeScale = 1;
@@ -28,52 +34,36 @@ namespace RacingControllers {
         public float trackWallHeight = 3f;
         public Material trackWallMaterial;
         public CarController carPrefab;
-        public float carScale = 1f;
         public int numberOfCarsInSimulation;
         public List<CarController> listOfCars;
-        public TextAsset yamlFile; // Drag the YAML file here in the inspector
-        public YamlData[] data;
         public readonly CarQueue carCreationQueue = new();
         public Dictionary<string, string> yaml_data_dictionary;
         private EnvironmentControllerNode environmentControllerNode;
-
+        public TextAsset yamlFile; // Drag the YAML file here in the inspector
+        public Dictionary<string, string> yaml_data_dictionary;
+        
+        private YamlData[] data; 
         private List<Vector3> leftEdge;
         private GameObject leftEdgeChild;
         private Mesh leftEdgeWallMesh;
-        public Queue<string> resetCarQueue = new();
         private List<Vector3> rightEdge;
         private GameObject rightEdgeChild;
         private Mesh rightEdgeWallMesh;
+
 
         private SplineCreator splineCreator;
 
         private List<Vector3> trackPoints;
 
         private void Start() {
-            LoadYamlFile();
-
+            LoadYAMLFile();
+            
             splineCreator = GetComponent<SplineCreator>();
-            environmentControllerNode = GetComponent<EnvironmentControllerNode>();
             Random.InitState(randomSeed);
             CreateTrack();
-            
-            environmentControllerNode.SpinUp();
         }
-
-        private void Update() {
-            Time.timeScale = timeScale;
-            CreateCarFromQueue(); // This method is only expensive if a car is actually being created
-            if (resetCarQueue.Count > 0) ResetCar(resetCarQueue.Dequeue());
-            UpdateCarsTrackProgress();
-
-            // Debug draw
-            if (!drawTrackDebugLines) return;
-            DrawSpline(trackPoints, Color.red);
-            DrawSpline(leftEdge, Color.blue);
-            DrawSpline(rightEdge, Color.green);
-        }
-
-        public void LoadYamlFile()
+        
+        public void LoadYAMLFile()
         {
             if (yamlFile != null)
             {
@@ -87,6 +77,18 @@ namespace RacingControllers {
             }
         }
 
+        private void Update() {
+            Time.timeScale = timeScale;
+            CreateCarFromQueue(); // This method is only expensive if a car is actually being created
+            UpdateCarsTrackProgress();
+
+            // Debug draw
+            if (!drawTrackDebugLines) return;
+            DrawSpline(trackPoints, Color.red);
+            DrawSpline(leftEdge, Color.blue);
+            DrawSpline(rightEdge, Color.green);
+        }
+
         [ContextMenu("Create track from seed")]
         public void CreateTrackFromSeed() {
             splineCreator.Seed = currentTrackGenerationSeed;
@@ -97,23 +99,14 @@ namespace RacingControllers {
             currentTrackGenerationSeed = (int)Random.Range(0f, 100f);
             CreateTrackFromSeed();
         }
-
-        private void ResetCar(string carName) {
-            if (listOfCars.All(car => car.carName != carName)) return;  // Guard clause
-            
-            var carController = listOfCars.FirstOrDefault(car => car.name == carName)!;
-            var position = GetPositionOnSpline(trackPoints, carController.carStats.trackProgress, out var rotation);
-            
-            var transform1 = carController.transform;
-            transform1.rotation = rotation;
-            transform1.position = position;
-        }
-
+        
         private void CreateTrack() {
             GenerateTrackLines();
             CreateAndRenderWallMeshes();
 
-            foreach (var car in listOfCars) car.carStats.SetNewTrack(trackPoints);
+            foreach (var car in listOfCars) {
+                car.carStats.SetNewTrack(trackPoints);
+            }
         }
 
         [ContextMenu("Create car at start of track")]
@@ -143,7 +136,6 @@ namespace RacingControllers {
             var carConfig = carCreationQueue.Dequeue();
             var position = GetPositionOnSpline(trackPoints, carConfig.startPercentLocation, out var rotation);
             var car = Instantiate(carPrefab, position, rotation);
-            car.transform.localScale = new Vector3(carScale, carScale, carScale);
             car.Config(carConfig);
             listOfCars.Add(car);
         }
@@ -400,10 +392,8 @@ namespace RacingControllers {
 
             return doubleSidedMesh;
         }
-
-        public List<CarStats> GetAllCarStats() {
-            return listOfCars.Select(car => car.carStats).ToList();
-        }
+        
+        public List<CarStats> GetAllCarStats() => listOfCars.Select(car => car.carStats).ToList();
     }
 
     public class CarQueue {
