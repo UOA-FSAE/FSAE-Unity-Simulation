@@ -58,6 +58,7 @@ namespace RacingControllers {
             CreateTrack();
             
             environmentControllerNode.SpinUp();
+            Debug.Log(yaml_data_dictionary["randomSeed"]);
         }
 
         private void Update() {

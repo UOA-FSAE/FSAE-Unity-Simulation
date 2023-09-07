@@ -379,8 +379,7 @@ MonoBehaviour:
   carScale: 1
   numberOfCarsInSimulation: 1
   listOfCars: []
-  yamlFile: {fileID: 0}
-  data: []
+  yamlFile: {fileID: 4900000, guid: 997b8b9f9455d89a7b608ea157662f07, type: 3}
 --- !u!114 &1895418216
 MonoBehaviour:
   m_ObjectHideFlags: 0
