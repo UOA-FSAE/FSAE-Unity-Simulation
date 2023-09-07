@@ -849,11 +849,11 @@
      <Reference Include="netstandard">
      <HintPath>/home/dyu056/Unity/Editors/2022.3.5f1/Editor/Data/UnityReferenceAssemblies/unity-4.8-api/Facades/netstandard.dll</HintPath>
      </Reference>
-     <Reference Include="UnityEditor.UI">
-     <HintPath>/home/dyu056/FSAE/simulation/FSAE-Unity-Simulation/Library/ScriptAssemblies/UnityEditor.UI.dll</HintPath>
-     </Reference>
      <Reference Include="UnityEngine.UI">
      <HintPath>/home/dyu056/FSAE/simulation/FSAE-Unity-Simulation/Library/ScriptAssemblies/UnityEngine.UI.dll</HintPath>
+     </Reference>
+     <Reference Include="UnityEditor.UI">
+     <HintPath>/home/dyu056/FSAE/simulation/FSAE-Unity-Simulation/Library/ScriptAssemblies/UnityEditor.UI.dll</HintPath>
      </Reference>
      <Reference Include="UnityEditor.TestRunner">
      <HintPath>/home/dyu056/FSAE/simulation/FSAE-Unity-Simulation/Library/ScriptAssemblies/UnityEditor.TestRunner.dll</HintPath>
