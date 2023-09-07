@@ -14,29 +14,11 @@ using Unity.VisualScripting;
 using UnityEngine.UIElements;
 using Random = UnityEngine.Random;
 
-[System.Serializable]
+[Serializable]
 public class YamlData
 {
     public string key;
     public string value;
-}
-
-public class general_numeric_value
-{
-    private int integer_value;
-    private float float_value;
-
-    public void store_value(float input_A = 0.0f, int input_B = 0)
-    {
-        this.integer_value = input_B;
-        this.float_value = input_A;
-    }
-
-    public float return_value()
-    {
-        float output = this.integer_value + this.float_value;
-        return output;
-    }
 }
 
 namespace RacingControllers {
@@ -55,6 +37,8 @@ namespace RacingControllers {
         public int numberOfCarsInSimulation;
         public List<CarController> listOfCars;
         public readonly CarQueue carCreationQueue = new();
+        public Dictionary<string, string> yaml_data_dictionary;
+        private EnvironmentControllerNode environmentControllerNode;
         public TextAsset yamlFile; // Drag the YAML file here in the inspector
         public Dictionary<string, string> yaml_data_dictionary;
         
