@@ -1,0 +1,12 @@
+- key: randomSeed
+  value: 12345
+- key: currentTrackGenerationSeed
+  value: 67890
+- key: trackThickness
+  value: 0.1
+- key: trackWallHeight
+  value: 1.5
+- key: numberOfCarsInSimulation
+  value: 10
+
+

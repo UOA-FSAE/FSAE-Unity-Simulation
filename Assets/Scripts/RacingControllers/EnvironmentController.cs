@@ -8,20 +8,10 @@ using UnityEngine;
 using Random = UnityEngine.Random;
 
 [Serializable]
-public class YamlData {
-    public bool drawTrackDebugLines;
-    public float timeScale = 1;
-
-
-    public int randomSeed;
-    public int currentTrackGenerationSeed;
-    public float trackThickness = 10f;
-
-    public float trackWallHeight = 3f;
-
-    //public Material trackWallMaterial;
-    //public CarController carPrefab;
-    public int numberOfCarsInSimulation;
+public class YamlData
+{
+    public string key;
+    public string value;
 }
 
 namespace RacingControllers {
@@ -42,10 +32,11 @@ namespace RacingControllers {
         public int numberOfCarsInSimulation;
         public List<CarController> listOfCars;
         public TextAsset yamlFile; // Drag the YAML file here in the inspector
-        public YamlData[] data;
         public readonly CarQueue carCreationQueue = new();
         private EnvironmentControllerNode environmentControllerNode;
+        public Dictionary<string, string> yaml_data_dictionary;
 
+        private YamlData[] data; 
         private List<Vector3> leftEdge;
         private GameObject leftEdgeChild;
         private Mesh leftEdgeWallMesh;
@@ -83,9 +74,15 @@ namespace RacingControllers {
         }
 
         public void LoadYamlFile() {
-            if (yamlFile != null) {
+            if (yamlFile != null)
+            {
                 var deserializer = new DeserializerBuilder().Build();
-                data = deserializer.Deserialize<YamlData[]>(new StringReader(yamlFile.text).ToString());
+                data = deserializer.Deserialize<YamlData[]>(new StringReader(yamlFile.text));
+                this.yaml_data_dictionary = new Dictionary<string, string>();
+                for (int i = 0; i < data.Count(); i++)
+                {
+                    yaml_data_dictionary.Add(data[i].key, data[i].value);
+                }
             }
         }
 
