@@ -10,13 +10,33 @@ using YamlDotNet.Serialization.NamingConventions;
 using UnityEngine.Serialization;
 using YamlDotNet.RepresentationModel;
 using System.IO;
+using Unity.VisualScripting;
+using UnityEngine.UIElements;
 using Random = UnityEngine.Random;
 
 [System.Serializable]
 public class YamlData
 {
     public string key;
-    public int value;
+    public string value;
+}
+
+public class general_numeric_value
+{
+    private int integer_value;
+    private float float_value;
+
+    public void store_value(float input_A = 0.0f, int input_B = 0)
+    {
+        this.integer_value = input_B;
+        this.float_value = input_A;
+    }
+
+    public float return_value()
+    {
+        float output = this.integer_value + this.float_value;
+        return output;
+    }
 }
 
 namespace RacingControllers {
@@ -36,14 +56,16 @@ namespace RacingControllers {
         public List<CarController> listOfCars;
         public readonly CarQueue carCreationQueue = new();
         public TextAsset yamlFile; // Drag the YAML file here in the inspector
-        public YamlData[] data; 
-
+        public Dictionary<string, string> yaml_data_dictionary;
+        
+        private YamlData[] data; 
         private List<Vector3> leftEdge;
         private GameObject leftEdgeChild;
         private Mesh leftEdgeWallMesh;
         private List<Vector3> rightEdge;
         private GameObject rightEdgeChild;
         private Mesh rightEdgeWallMesh;
+
 
         private SplineCreator splineCreator;
 
@@ -63,6 +85,11 @@ namespace RacingControllers {
             {
                 var deserializer = new DeserializerBuilder().Build();
                 data = deserializer.Deserialize<YamlData[]>(new StringReader(yamlFile.text));
+                this.yaml_data_dictionary = new Dictionary<string, string>();
+                for (int i = 0; i < data.Count(); i++)
+                {
+                    yaml_data_dictionary.Add(data[i].key, data[i].value);
+                }
             }
         }
 

@@ -377,7 +377,7 @@ MonoBehaviour:
   carPrefab: {fileID: 2430717870602928266, guid: d2a2494c30245e5dd89f2e86d15bf09f, type: 3}
   numberOfCarsInSimulation: 1
   listOfCars: []
-  yamlFile: {fileID: 4900000, guid: 9fd9769b61f50e7d894096a90e6f262b, type: 3}
+  yamlFile: {fileID: 4900000, guid: d10d6c2fb976fe5a79be45e81abd9a9d, type: 3}
   data: []
 --- !u!114 &1895418216
 MonoBehaviour:
