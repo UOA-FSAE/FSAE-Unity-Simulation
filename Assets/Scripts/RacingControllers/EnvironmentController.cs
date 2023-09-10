@@ -6,6 +6,7 @@ using Car;
 using YamlDotNet.Serialization;
 using UnityEngine;
 using Random = UnityEngine.Random;
+using static HelperClass;
 
 [Serializable]
 public class YamlData
@@ -160,9 +161,9 @@ namespace RacingControllers {
         }
 
         private void CreateAndRenderWallMeshes() {
-            leftEdgeWallMesh = CreateWallMesh(leftEdge);
+            leftEdgeWallMesh = HelperClass.CreateWallMesh(leftEdge, trackWallHeight);
             leftEdgeWallMesh = MakeDoubleSided(leftEdgeWallMesh);
-            rightEdgeWallMesh = CreateWallMesh(rightEdge);
+            rightEdgeWallMesh = HelperClass.CreateWallMesh(rightEdge, trackWallHeight);
             rightEdgeWallMesh = MakeDoubleSided(rightEdgeWallMesh);
 
             leftEdgeChild = CreateOrUpdateChildWithMesh("LeftEdgeChild", leftEdgeWallMesh, leftEdgeChild);
@@ -212,44 +213,6 @@ namespace RacingControllers {
             Debug.DrawLine(spline.Last(), spline[0], colour);
         }
 
-        private Mesh CreateWallMesh(List<Vector3> points) {
-            var mesh = new Mesh();
-
-            var vertices = new List<Vector3>();
-            var triangles = new List<int>();
-
-            for (var i = 0; i < points.Count; i++) {
-                // Add bottom vertex
-                vertices.Add(points[i]);
-
-                // Add top vertex
-                vertices.Add(new Vector3(points[i].x, points[i].y + trackWallHeight, points[i].z));
-            }
-
-            // Generate triangles
-            for (var i = 0; i < points.Count; i++) {
-                var bottomLeft = i * 2;
-                var topLeft = i * 2 + 1;
-                var bottomRight = (i + 1) % points.Count * 2; // Use modulo for looping
-                var topRight = (i + 1) % points.Count * 2 + 1; // Use modulo for looping
-
-                // First triangle
-                triangles.Add(bottomLeft);
-                triangles.Add(topRight);
-                triangles.Add(topLeft);
-
-                // Second triangle
-                triangles.Add(bottomLeft);
-                triangles.Add(bottomRight);
-                triangles.Add(topRight);
-            }
-
-            mesh.vertices = vertices.ToArray();
-            mesh.triangles = triangles.ToArray();
-            mesh.RecalculateNormals();
-
-            return mesh;
-        }
 
         private Vector3 GetPositionOnSpline(List<Vector3> spline, float percentage, out Quaternion rotation) {
             if (spline == null || spline.Count < 2) {
@@ -341,21 +304,12 @@ namespace RacingControllers {
             }
         }
 
-        private static bool DoSegmentsIntersect(Vector3 p1, Vector3 p2, Vector3 p3, Vector3 p4) {
-            // Using determinant method to check for intersection
-            var det = (p2.x - p1.x) * (p4.z - p3.z) - (p2.z - p1.z) * (p4.x - p3.x);
-            if (det == 0) return false; // Parallel segments
-
-            var lambda = ((p4.z - p3.z) * (p4.x - p1.x) + (p3.x - p4.x) * (p4.z - p1.z)) / det;
-            var gamma = ((p1.z - p2.z) * (p4.x - p1.x) + (p2.x - p1.x) * (p4.z - p1.z)) / det;
-
-            return 0 < lambda && lambda < 1 && 0 < gamma && gamma < 1;
-        }
+        
 
         private static List<Vector3> RemoveSelfIntersections(List<Vector3> spline) {
             for (var i = 0; i < spline.Count - 1; i++) {
                 for (var j = i + 2; j < spline.Count - 1; j++)
-                    if (DoSegmentsIntersect(spline[i], spline[i + 1], spline[j], spline[j + 1])) {
+                    if (HelperClass.DoSegmentsIntersect(spline[i], spline[i + 1], spline[j], spline[j + 1])) {
                         // Remove points between i+1 and j
                         spline.RemoveRange(i + 1, j - i);
                         return RemoveSelfIntersections(spline); // Recursively clean up further intersections
