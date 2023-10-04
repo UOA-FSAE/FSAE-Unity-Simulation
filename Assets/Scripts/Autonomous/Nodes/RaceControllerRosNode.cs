@@ -27,7 +27,7 @@ namespace Autonomous.Nodes {
 
             ros2Node = ros2UnityCore.CreateNode($"RaceControllerNode");
             
-            raceStatsPublisher = ros2Node.CreatePublisher<ros2_msgs.msg.RaceStats>("race_controller/race_stats");
+            raceStatsPublisher = ros2Node.CreatePublisher<RaceStats>("race_controller/race_stats");
             
             resetSubscription = ros2Node.CreateSubscription<String>("race_controller/reset", ResetCarCallback);
             createSubscription = ros2Node.CreateSubscription<String>("race_controller/create", CreateCarCallback);

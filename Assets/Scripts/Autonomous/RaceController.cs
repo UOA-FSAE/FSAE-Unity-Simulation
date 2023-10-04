@@ -10,9 +10,11 @@ namespace Autonomous {
         private RaceControllerRosNode raceControllerRosNode;
 
         public CarController carPrefab;
-        
+        public int maxNumberOfCarsInSim = 10;
         public CarQueue<string> carResetQueue = new();
         public CarQueue<string> carCreateQueue = new();
+
+        private List<CarController> listOfCars = new();
         
         private void Start() {
             trackController = GetComponent<TrackController>();
@@ -25,8 +27,10 @@ namespace Autonomous {
         }
 
         private void Update() {
-            if (carCreateQueue.Count > 0) SpawnCar(carCreateQueue.Dequeue());
-            if (carResetQueue.Count > 0) ResetCar(carCreateQueue.Dequeue());
+            if (carCreateQueue.Count > 0 && listOfCars.Count != maxNumberOfCarsInSim) 
+                SpawnCar(carCreateQueue.Dequeue());
+            if (carResetQueue.Count > 0) 
+                ResetCar(carCreateQueue.Dequeue());
         }
 
         private void ResetCar(string carConfig) {
