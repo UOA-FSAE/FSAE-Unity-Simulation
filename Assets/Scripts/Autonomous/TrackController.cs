@@ -27,7 +27,7 @@ namespace Autonomous {
         private GameObject rightEdgeChild;
         private Mesh rightEdgeWallMesh;
         
-        private List<Vector3> trackPoints;
+        public List<Vector3> trackPoints;
 
         private void Awake() {
             splineCreator = GetComponent<SplineCreator>();
