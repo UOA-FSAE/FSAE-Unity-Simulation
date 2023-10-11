@@ -6,14 +6,33 @@ using UnityEngine;
 
 namespace Autonomous {
     public class TrackMeasurer : MonoBehaviour {
-        public float GetPercentCoverage(Vector3 pointA, List<Vector3> trackPoints) {
+
+        
+        /// <summary>
+        /// Method <c>GetPercentCoverage</c>
+        /// Gets the percentage of a point's distance about a track's center line (described by a list of Vector3 points).
+        /// Measures from the first point in <c>trackPoints</c>.
+        /// <param name="pointB">End point to measure to.</param>
+        /// <param name="trackPoints">List of Vector3 points describing the center line of the track.</param>
+        /// <returns>A float representing how far round the track <c>pointB</c> is from the <c>trackPoints[0]</c> as a percentage of the track's length</returns>
+        /// <summary>
+        public float GetPercentCoverage(Vector3 pointB, List<Vector3> trackPoints) {
             if (trackPoints.Count < 1) {
                 return -1.0f;
             }
-            Vector3 pointB = trackPoints[0];
+            Vector3 pointA = trackPoints[0];
 
             return GetPercentCoverage(pointA, pointB, trackPoints);
         }
+
+        /// <summary>
+        /// Method <c>GetPercentCoverage</c>
+        /// Gets the percentage of a track's center line (described by a list of Vector3 points) that lies between two points.
+        /// <param name="pointA">start point to measure from.</param>
+        /// <param name="pointB">End point to measure to.</param>
+        /// <param name="trackPoints">List of Vector3 points describing the center line of the track.</param>
+        /// <returns>A float representing how far round the track <c>pointB</c> is from <c>pointA</c> as a percentage of the track's length</returns>
+        /// <summary>
         public float GetPercentCoverage(Vector3 pointA, Vector3 pointB, List<Vector3> trackPoints) {
             /*
             returns the percentage of the track (in distance) that lies between
@@ -41,7 +60,7 @@ namespace Autonomous {
             float trackPointToADist = 0.0f;
             float trackPointToBDist = 0.0f;
             float deltaDistance;
-            
+
 
             for (int i = 0; i < trackPoints.Count; i ++){
                 
@@ -92,6 +111,14 @@ namespace Autonomous {
 
         }
 
+        /// <summary>
+        /// Method <c>GetPositionOnSpline</c>
+        /// Gets the position (Vector3) on a track's center line (described by a list of Vector3 points) that is <c>percentage</c> percent about the track.
+        /// <param name="trackPoints">List of Vector3 points describing the center line of the track.</param>
+        /// <param name="percentage">Percent around the track to ind the distance.</param>
+        /// <param name="rotation">A mutated Quaternion passed by referenced set equal to the baring of the track at the returned point.</param>
+        /// <returns>A <c>Vector3</c> representing the position <c>percentage</c> percent along the track.</returns>
+        /// <summary>
         public Vector3 GetPositionOnSpline(List<Vector3> trackPoints, float percentage, out Quaternion rotation) {
             
             // (handles percentage > 100%)
@@ -129,8 +156,8 @@ namespace Autonomous {
             Vector3 pointB = trackPoints[j];
 
 
-            //remove overshoot
-            //lerpPercent = 1 - (overshot percent / track segment as percent of map length)
+            // remove overshoot
+            // lerpPercent = 1 - (overshot percent / track segment as percent of map length)
             float overshotPercent = (distance/mapLength - percentage);
             float segmentTrackPercent = (Vector3.Distance(pointA, pointB) / mapLength);
             float lerpPercent = 1 - overshotPercent/segmentTrackPercent;
