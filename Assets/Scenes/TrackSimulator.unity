@@ -170,6 +170,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 40e94fb8f27d40cf8d03477820f1446a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  carPrefab: {fileID: 2430717870602928266, guid: d2a2494c30245e5dd89f2e86d15bf09f, type: 3}
+  maxNumberOfCarsInSim: 12
 --- !u!114 &58497710
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -188,6 +190,7 @@ MonoBehaviour:
   trackWallHeight: 3
   trackWallMaterial: {fileID: 2100000, guid: 628567cc4ac3c5628872c6a6b7651ff9, type: 2}
   randomSeed: 0
+  trackPoints: []
 --- !u!114 &58497711
 MonoBehaviour:
   m_ObjectHideFlags: 0

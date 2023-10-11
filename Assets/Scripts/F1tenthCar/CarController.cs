@@ -27,6 +27,7 @@ public class CarController : MonoBehaviour {
     public string carName;
     public bool enableDebug;
     public bool isReady;
+    public bool isCollided = false;
     [SerializeField] private float currentSetThrottle;
     [SerializeField] private float currentSetSteeringAngle;
 
@@ -69,10 +70,8 @@ public class CarController : MonoBehaviour {
     }
 
     [ContextMenu("Config Car")]
-    public void Config(CarConfig config) {
-        carConfig = config;
-
-        carStats.Config(config);
+    public void Config(string config) {
+        carName = config;
 
         actionNode.Config();
         actionNode.spin_up();
@@ -108,5 +107,13 @@ public class CarController : MonoBehaviour {
 
         visualWheel.transform.position = position;
         visualWheel.transform.rotation = rotation;
+    }
+
+    void OnCollisionEnter(Collision collision) {
+        isCollided = true;
+    }
+
+    private void OnCollisionExit(Collision other) {
+        isCollided = false;
     }
 }

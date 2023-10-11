@@ -1,6 +1,7 @@
 using UnityEngine;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Autonomous.Nodes;
 
 namespace Autonomous {
@@ -30,15 +31,24 @@ namespace Autonomous {
             if (carCreateQueue.Count > 0 && listOfCars.Count != maxNumberOfCarsInSim) 
                 SpawnCar(carCreateQueue.Dequeue());
             if (carResetQueue.Count > 0) 
-                ResetCar(carCreateQueue.Dequeue());
+                ResetCar(carResetQueue.Dequeue());
         }
 
         private void ResetCar(string carConfig) {
-            throw new NotImplementedException();
+            var car = listOfCars.Where(car => car.carName == carConfig).ToList()[0];
+            var percent_around_track =
+                TrackMeasurer.GetPercentCoverage(car.transform.position, trackController.trackPoints);
+            var position = TrackMeasurer.GetPositionOnSpline(trackController.trackPoints, percent_around_track, out var rotation);
+            car.transform.position = position;
+            car.transform.rotation = rotation;
         }
 
         private void SpawnCar(string carConfig) {
-            throw new NotImplementedException();
+            var position = TrackMeasurer.GetPositionOnSpline(trackController.trackPoints, 0f, out var rotation);
+            var car = Instantiate(carPrefab, position, rotation);
+            car.transform.localScale = new Vector3(1, 1, 1);
+            car.Config(carConfig);
+            listOfCars.Add(car);
         }
     }
     

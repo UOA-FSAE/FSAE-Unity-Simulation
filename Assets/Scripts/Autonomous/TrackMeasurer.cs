@@ -1,11 +1,9 @@
-
 using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-
 namespace Autonomous {
-    public class TrackMeasurer : MonoBehaviour {
+    public class TrackMeasurer {
 
         
         /// <summary>
@@ -16,7 +14,7 @@ namespace Autonomous {
         /// <param name="trackPoints">List of Vector3 points describing the center line of the track.</param>
         /// <returns>A float representing how far round the track <c>pointB</c> is from the <c>trackPoints[0]</c> as a percentage of the track's length</returns>
         /// <summary>
-        public float GetPercentCoverage(Vector3 pointB, List<Vector3> trackPoints) {
+        public static float GetPercentCoverage(Vector3 pointB, List<Vector3> trackPoints) {
             if (trackPoints.Count < 1) {
                 return -1.0f;
             }
@@ -33,7 +31,7 @@ namespace Autonomous {
         /// <param name="trackPoints">List of Vector3 points describing the center line of the track.</param>
         /// <returns>A float representing how far round the track <c>pointB</c> is from <c>pointA</c> as a percentage of the track's length</returns>
         /// <summary>
-        public float GetPercentCoverage(Vector3 pointA, Vector3 pointB, List<Vector3> trackPoints) {
+        public static float GetPercentCoverage(Vector3 pointA, Vector3 pointB, List<Vector3> trackPoints) {
             /*
             returns the percentage of the track (in distance) that lies between
             pointA and pointB following the direction of the track's spline.
@@ -102,7 +100,7 @@ namespace Autonomous {
                 deltaDistance = distanceB - distanceA;
             }
             else {
-                deltaDistance = (mapLength - distanceA) + distanceB; 
+                deltaDistance = mapLength - distanceA + distanceB; 
             }
 
             // percentage as a float in range [0.0, 1.0]
@@ -119,7 +117,7 @@ namespace Autonomous {
         /// <param name="rotation">A mutated Quaternion passed by referenced set equal to the baring of the track at the returned point.</param>
         /// <returns>A <c>Vector3</c> representing the position <c>percentage</c> percent along the track.</returns>
         /// <summary>
-        public Vector3 GetPositionOnSpline(List<Vector3> trackPoints, float percentage, out Quaternion rotation) {
+        public static Vector3 GetPositionOnSpline(List<Vector3> trackPoints, float percentage, out Quaternion rotation) {
             
             // (handles percentage > 100%)
             percentage = percentage % 1;
@@ -158,20 +156,19 @@ namespace Autonomous {
 
             // remove overshoot
             // lerpPercent = 1 - (overshot percent / track segment as percent of map length)
-            float overshotPercent = (distance/mapLength - percentage);
-            float segmentTrackPercent = (Vector3.Distance(pointA, pointB) / mapLength);
+            float overshotPercent = distance/mapLength - percentage;
+            float segmentTrackPercent = Vector3.Distance(pointA, pointB) / mapLength;
             float lerpPercent = 1 - overshotPercent/segmentTrackPercent;
             
             // interpolate back towards PointA
             Vector3 position = Vector3.Lerp(pointB, pointA, lerpPercent);
             
             // Calculate rotation
-            Vector3 upwards = new Vector3(0.0f,0.0f,1.0f);
             Vector3 directionalVector = Vector3.Normalize(pointA - pointB);
-            Vector3 rightwards = Vector3.Cross(directionalVector, upwards);
+            float angle = Vector3.Angle(Vector3.forward, directionalVector);
 
             // outputs
-            rotation = Quaternion.AngleAxis(30, Vector3.up);
+            rotation = Quaternion.AngleAxis(angle, Vector3.up);
             return position;
 
         }
