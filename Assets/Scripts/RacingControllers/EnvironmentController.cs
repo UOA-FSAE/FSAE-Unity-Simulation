@@ -144,7 +144,7 @@ namespace RacingControllers {
             var position = GetPositionOnSpline(trackPoints, carConfig.startPercentLocation, out var rotation);
             var car = Instantiate(carPrefab, position, rotation);
             car.transform.localScale = new Vector3(carScale, carScale, carScale);
-            car.Config(carConfig);
+            car.Config(carConfig.carName);
             listOfCars.Add(car);
         }
 

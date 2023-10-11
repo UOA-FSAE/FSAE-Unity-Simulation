@@ -1,12 +1,10 @@
-
 using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-
 namespace Autonomous {
-    public class TrackMeasurer : MonoBehaviour {
-        public float GetPercentCoverage(Vector3 pointA, List<Vector3> trackPoints) {
+    public class TrackMeasurer {
+        public static float GetPercentCoverage(Vector3 pointA, List<Vector3> trackPoints) {
             if (trackPoints.Count < 1) {
                 return -1.0f;
             }
@@ -14,7 +12,7 @@ namespace Autonomous {
 
             return GetPercentCoverage(pointA, pointB, trackPoints);
         }
-        public float GetPercentCoverage(Vector3 pointA, Vector3 pointB, List<Vector3> trackPoints) {
+        public static float GetPercentCoverage(Vector3 pointA, Vector3 pointB, List<Vector3> trackPoints) {
             /*
             returns the percentage of the track (in distance) that lies between
             pointA and pointB following the direction of the track's spline.
@@ -92,7 +90,7 @@ namespace Autonomous {
 
         }
 
-        public Vector3 GetPositionOnSpline(List<Vector3> trackPoints, float percentage, out Quaternion rotation) {
+        public static Vector3 GetPositionOnSpline(List<Vector3> trackPoints, float percentage, out Quaternion rotation) {
             
             // (handles percentage > 100%)
             percentage = percentage % 1;
