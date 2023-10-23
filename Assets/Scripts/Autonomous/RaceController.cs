@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Autonomous.Nodes;
+using rcl_interfaces.msg;
 
 namespace Autonomous {
     [RequireComponent(typeof(TrackController))]
@@ -38,6 +39,7 @@ namespace Autonomous {
             var car = listOfCars.Where(car => car.carName == carConfig).ToList()[0];
             var percent_around_track =
                 TrackMeasurer.GetPercentCoverage(car.transform.position, trackController.trackPoints);
+            Debug.Log($"POSTION:{percent_around_track}");
             var position = TrackMeasurer.GetPositionOnSpline(trackController.trackPoints, percent_around_track, out var rotation);
             car.transform.position = position;
             car.transform.rotation = rotation;

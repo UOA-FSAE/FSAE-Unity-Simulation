@@ -91,8 +91,8 @@ namespace Autonomous {
             on whether points A/B lie ahead or behind their respective
             closest track point.
             */
-            distanceA += trackPointToADist * Vector3.Dot(Vector3.Normalize(directionA1), Vector3.Normalize(directionA2));
-            distanceB += trackPointToBDist * Vector3.Dot(Vector3.Normalize(directionB1), Vector3.Normalize(directionB2));
+            // distanceA += trackPointToADist * Vector3.Dot(Vector3.Normalize(directionA1), Vector3.Normalize(directionA2));
+            // distanceB += trackPointToBDist * Vector3.Dot(Vector3.Normalize(directionB1), Vector3.Normalize(directionB2));
             
 
             // wrap around edge case
@@ -113,7 +113,7 @@ namespace Autonomous {
         /// Method <c>GetPositionOnSpline</c>
         /// Gets the position (Vector3) on a track's center line (described by a list of Vector3 points) that is <c>percentage</c> percent about the track.
         /// <param name="trackPoints">List of Vector3 points describing the center line of the track.</param>
-        /// <param name="percentage">Percent around the track to ind the distance.</param>
+        /// <param name="percentage">Percent around the track to Find the distance.</param>
         /// <param name="rotation">A mutated Quaternion passed by referenced set equal to the baring of the track at the returned point.</param>
         /// <returns>A <c>Vector3</c> representing the position <c>percentage</c> percent along the track.</returns>
         /// <summary>
@@ -135,6 +135,7 @@ namespace Autonomous {
                 j = (i+1)%trackPoints.Count;
                 mapLength += Vector3.Distance(trackPoints[i], trackPoints[j]);
             }
+            Debug.Log($"Map Length: {mapLength}");
 
             i = 0;
             j = 0;
@@ -169,8 +170,8 @@ namespace Autonomous {
 
             // outputs
             rotation = Quaternion.AngleAxis(angle, Vector3.up);
-            return position;
-
+            //return position;
+            return pointA;
         }
 
     }
