@@ -5,53 +5,60 @@ using System.IO;
 using System.Linq;
 using YamlDotNet.Serialization;
 
-namespace Autonomous {
+namespace Autonomous
+{
     [RequireComponent(typeof(SplineCreator))]
-    public class TrackController : MonoBehaviour {
-        
+    public class InstantiationExample : MonoBehaviour
+    {
+
         public bool drawTrackDebugLines;
 
         public int currentTrackGenerationSeed;
-        public float trackThickness = 20f;
-        public float trackWallHeight = 5f;
-        public Material trackWallMaterial;
-
         
+        public GameObject coneBlue;
+        public GameObject coneRed;
+        public GameObject parent;
+
         public int randomSeed;
         private SplineCreator splineCreator;
-        
+        public float trackThickness = 20f;
+        public Material trackWallMaterial;
+
         private List<Vector3> leftEdge;
         private GameObject leftEdgeChild;
-        private Mesh leftEdgeWallMesh;
         private List<Vector3> rightEdge;
         private GameObject rightEdgeChild;
-        private Mesh rightEdgeWallMesh;
-        
+
         public List<Vector3> trackPoints;
 
-        private void Awake() {
+        private void Awake()
+        {
             splineCreator = GetComponent<SplineCreator>();
         }
-        private void Update() {
+        private void Update()
+        {
             // Debug draw
             if (!drawTrackDebugLines) return;
             DrawSpline(trackPoints, Color.red);
             DrawSpline(leftEdge, Color.blue);
             DrawSpline(rightEdge, Color.green);
         }
-        
-        public void CreateTrack() {
+
+        public void CreateTrack()
+        {
             splineCreator.Seed = currentTrackGenerationSeed;
             GenerateTrackLines();
             CreateAndRenderWallMeshes();
         }
-        
-        public void CreateTrack(int seed) {
+
+        public void CreateTrack(int seed)
+        {
             currentTrackGenerationSeed = seed;
             CreateTrack();
         }
-        
-        private void GenerateTrackLines() {
+
+        private void GenerateTrackLines()
+        {
             splineCreator.GenerateVoronoi();
             splineCreator.GenerateSpline();
             trackPoints = splineCreator.Spline.AllSmoothPoints;
@@ -62,20 +69,18 @@ namespace Autonomous {
             RemoveSelfIntersections(rightEdge);
         }
 
-        private void CreateAndRenderWallMeshes() {
-            leftEdgeWallMesh = CreateWallMesh(leftEdge);
-            leftEdgeWallMesh = MakeDoubleSided(leftEdgeWallMesh);
-            rightEdgeWallMesh = CreateWallMesh(rightEdge);
-            rightEdgeWallMesh = MakeDoubleSided(rightEdgeWallMesh);
-
-            leftEdgeChild = CreateOrUpdateChildWithMesh("LeftEdgeChild", leftEdgeWallMesh, leftEdgeChild);
-            rightEdgeChild = CreateOrUpdateChildWithMesh("RightEdgeChild", rightEdgeWallMesh, rightEdgeChild);
+        private void CreateAndRenderWallMeshes()
+        {
+            CreateWallMesh(leftEdge);
+            CreateWallMesh(rightEdge);
         }
-        
-        
-        private GameObject CreateOrUpdateChildWithMesh(string childName, Mesh mesh, GameObject existingChild) {
+
+
+        private GameObject CreateOrUpdateChildWithMesh(string childName, Mesh mesh, GameObject existingChild)
+        {
             GameObject child;
-            if (existingChild == null) {
+            if (existingChild == null)
+            {
                 // If there's no existing child, create a new one
                 child = new GameObject(childName);
                 child.transform.SetParent(transform);
@@ -87,7 +92,8 @@ namespace Autonomous {
                 child.AddComponent<MeshRenderer>();
                 child.AddComponent<MeshCollider>();
             }
-            else {
+            else
+            {
                 child = existingChild;
             }
 
@@ -106,10 +112,12 @@ namespace Autonomous {
             return child;
         }
 
-        
-        private void DrawSpline(List<Vector3> spline, Color colour) {
+
+        private void DrawSpline(List<Vector3> spline, Color colour)
+        {
             var prevPoint = spline[0];
-            foreach (var point in spline) {
+            foreach (var point in spline)
+            {
                 Debug.DrawLine(prevPoint, point, colour);
                 prevPoint = point;
             }
@@ -117,47 +125,20 @@ namespace Autonomous {
             Debug.DrawLine(spline.Last(), spline[0], colour);
         }
 
-        private Mesh CreateWallMesh(List<Vector3> points) {
-            var mesh = new Mesh();
+        private void CreateWallMesh(List<Vector3> points)
+        {
 
-            var vertices = new List<Vector3>();
-            var triangles = new List<int>();
-
-            for (var i = 0; i < points.Count; i++) {
-                // Add bottom vertex
-                vertices.Add(points[i]);
-
-                // Add top vertex
-                vertices.Add(new Vector3(points[i].x, points[i].y + trackWallHeight, points[i].z));
+            for (var i = 0; i < points.Count; i++)
+            {
+                Instantiate(coneRed, points[i], Quaternion.identity);
             }
 
-            // Generate triangles
-            for (var i = 0; i < points.Count; i++) {
-                var bottomLeft = i * 2;
-                var topLeft = i * 2 + 1;
-                var bottomRight = (i + 1) % points.Count * 2; // Use modulo for looping
-                var topRight = (i + 1) % points.Count * 2 + 1; // Use modulo for looping
-
-                // First triangle
-                triangles.Add(bottomLeft);
-                triangles.Add(topRight);
-                triangles.Add(topLeft);
-
-                // Second triangle
-                triangles.Add(bottomLeft);
-                triangles.Add(bottomRight);
-                triangles.Add(topRight);
-            }
-
-            mesh.vertices = vertices.ToArray();
-            mesh.triangles = triangles.ToArray();
-            mesh.RecalculateNormals();
-
-            return mesh;
         }
-        
-        public Vector3 GetPositionOnSpline(List<Vector3> spline, float percentage, out Quaternion rotation) {
-            if (spline == null || spline.Count < 2) {
+
+        public Vector3 GetPositionOnSpline(List<Vector3> spline, float percentage, out Quaternion rotation)
+        {
+            if (spline == null || spline.Count < 2)
+            {
                 rotation = Quaternion.identity;
                 return Vector3.zero;
             }
@@ -168,9 +149,11 @@ namespace Autonomous {
             var targetLength = totalLength * percentage;
             var accumulatedLength = 0f;
 
-            for (var i = 0; i < spline.Count - 1; i++) {
+            for (var i = 0; i < spline.Count - 1; i++)
+            {
                 var segmentLength = Vector3.Distance(spline[i], spline[i + 1]);
-                if (accumulatedLength + segmentLength >= targetLength) {
+                if (accumulatedLength + segmentLength >= targetLength)
+                {
                     var segmentPercentage = (targetLength - accumulatedLength) / segmentLength;
                     var direction = (spline[i + 1] - spline[i]).normalized;
                     rotation = Quaternion.LookRotation(direction);
@@ -185,15 +168,17 @@ namespace Autonomous {
             return spline[spline.Count - 1];
         }
 
-        
-        private static Vector3 GetCenterPoint(List<Vector3> points) {
+
+        private static Vector3 GetCenterPoint(List<Vector3> points)
+        {
             if (points == null || points.Count == 0) throw new ArgumentException("List of points is null or empty.");
 
             float sumX = 0;
             float sumY = 0;
             float sumZ = 0;
 
-            foreach (var point in points) {
+            foreach (var point in points)
+            {
                 sumX += point.x;
                 sumY += point.y;
                 sumZ += point.z;
@@ -202,21 +187,24 @@ namespace Autonomous {
             return new Vector3(sumX / points.Count, sumY / points.Count, sumZ / points.Count);
         }
 
-        private static void TranslatePoints(List<Vector3> points, Vector3 translationAmount) {
+        private static void TranslatePoints(List<Vector3> points, Vector3 translationAmount)
+        {
             if (points == null) throw new ArgumentException("List of points is null.");
 
             for (var i = 0; i < points.Count; i++) points[i] -= translationAmount;
         }
 
         private static void GetEdgeSplines(List<Vector3> spline, float thickness,
-                                           out List<Vector3> leftEdge, out List<Vector3> rightEdge) {
+                                           out List<Vector3> leftEdge, out List<Vector3> rightEdge)
+        {
             leftEdge = new List<Vector3>();
             rightEdge = new List<Vector3>();
 
             var perps = new List<Vector3>();
 
             // Calculate perpendicular vectors for each point
-            for (var i = 0; i < spline.Count; i++) {
+            for (var i = 0; i < spline.Count; i++)
+            {
                 Vector3 tangent;
 
                 // Calculate the tangent vector
@@ -236,7 +224,8 @@ namespace Autonomous {
             }
 
             // Generate the left and right splines
-            for (var i = 0; i < spline.Count; i++) {
+            for (var i = 0; i < spline.Count; i++)
+            {
                 var perp = perps[i];
 
                 // For inner edge smoothing: average adjacent perpendicular vectors
@@ -247,7 +236,8 @@ namespace Autonomous {
             }
         }
 
-        private static bool DoSegmentsIntersect(Vector3 p1, Vector3 p2, Vector3 p3, Vector3 p4) {
+        private static bool DoSegmentsIntersect(Vector3 p1, Vector3 p2, Vector3 p3, Vector3 p4)
+        {
             // Using determinant method to check for intersection
             var det = (p2.x - p1.x) * (p4.z - p3.z) - (p2.z - p1.z) * (p4.x - p3.x);
             if (det == 0) return false; // Parallel segments
@@ -258,10 +248,13 @@ namespace Autonomous {
             return 0 < lambda && lambda < 1 && 0 < gamma && gamma < 1;
         }
 
-        private static List<Vector3> RemoveSelfIntersections(List<Vector3> spline) {
-            for (var i = 0; i < spline.Count - 1; i++) {
+        private static List<Vector3> RemoveSelfIntersections(List<Vector3> spline)
+        {
+            for (var i = 0; i < spline.Count - 1; i++)
+            {
                 for (var j = i + 2; j < spline.Count - 1; j++)
-                    if (DoSegmentsIntersect(spline[i], spline[i + 1], spline[j], spline[j + 1])) {
+                    if (DoSegmentsIntersect(spline[i], spline[i + 1], spline[j], spline[j + 1]))
+                    {
                         // Remove points between i+1 and j
                         spline.RemoveRange(i + 1, j - i);
                         return RemoveSelfIntersections(spline); // Recursively clean up further intersections
@@ -271,7 +264,8 @@ namespace Autonomous {
             return spline;
         }
 
-        private Mesh MakeDoubleSided(Mesh mesh) {
+        private Mesh MakeDoubleSided(Mesh mesh)
+        {
             var doubleSidedMesh = new Mesh();
 
             // Get existing vertices and triangles
@@ -290,7 +284,8 @@ namespace Autonomous {
             for (var i = 0; i < vertices.Length; i++) newVertices[vertices.Length + i] = vertices[i];
 
             // Duplicate and reverse triangles
-            for (var i = 0; i < triangles.Length; i += 3) {
+            for (var i = 0; i < triangles.Length; i += 3)
+            {
                 var offset = vertices.Length;
                 newTriangles[triangles.Length + i] = triangles[i + 2] + offset;
                 newTriangles[triangles.Length + i + 1] = triangles[i + 1] + offset;

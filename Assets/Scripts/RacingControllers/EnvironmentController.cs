@@ -24,7 +24,7 @@ namespace RacingControllers {
 
         public int randomSeed;
         public int currentTrackGenerationSeed;
-        public float trackThickness = 10f;
+        public float trackThickness = 3f;
         public float trackWallHeight = 3f;
         public Material trackWallMaterial;
         public CarController carPrefab;
@@ -36,7 +36,17 @@ namespace RacingControllers {
         private EnvironmentControllerNode environmentControllerNode;
         public Dictionary<string, string> yaml_data_dictionary;
 
-        private YamlData[] data; 
+        [SerializeField]
+        private bool GenerateCones = false;
+        public bool generateCones
+        { get { return GenerateCones; } set { GenerateCones = value; } }
+
+        public GameObject coneLeft;
+        public GameObject coneRight;
+        public float desiredDistance = 1.5f;
+
+        private YamlData[] data;
+        private bool canSkip = false;
         private List<Vector3> leftEdge;
         private GameObject leftEdgeChild;
         private Mesh leftEdgeWallMesh;
@@ -164,6 +174,8 @@ namespace RacingControllers {
             leftEdgeWallMesh = MakeDoubleSided(leftEdgeWallMesh);
             rightEdgeWallMesh = CreateWallMesh(rightEdge);
             rightEdgeWallMesh = MakeDoubleSided(rightEdgeWallMesh);
+            CreatCones(leftEdge, coneLeft);
+            CreatCones(rightEdge, coneRight);
 
             leftEdgeChild = CreateOrUpdateChildWithMesh("LeftEdgeChild", leftEdgeWallMesh, leftEdgeChild);
             rightEdgeChild = CreateOrUpdateChildWithMesh("RightEdgeChild", rightEdgeWallMesh, rightEdgeChild);
@@ -210,6 +222,51 @@ namespace RacingControllers {
             }
 
             Debug.DrawLine(spline.Last(), spline[0], colour);
+        }
+
+        private void CreatCones(List<Vector3> points,GameObject coneType) {
+            //Check if user want cones
+            if (!GenerateCones)
+            {
+                return;
+            }
+
+            float distance;
+
+           
+            for (var i = 0; i < points.Count; i++)
+            {
+                //Get cone position based on spline genrator result
+                Vector3 nextPoint = points[(i + 1) % points.Count];
+                distance = Vector3.Distance(points[i], nextPoint);
+
+                //  If distance between cones are small and stacked together, skip some position
+                if (distance < 0.8)
+                {
+                    if(distance < 0.15)
+                    {
+                        continue;
+                    }
+                    else if(canSkip)
+                    {
+                        canSkip = false;
+                        continue;
+                    }
+                }
+                Instantiate(coneType, points[i], Quaternion.identity);
+                canSkip = true;
+
+                // If distance between cones are too large, add more 
+                if (distance > desiredDistance)
+                {
+                    int NumPoints = Mathf.FloorToInt(distance / desiredDistance) - 1;
+                    for (int j = 1; j <= NumPoints; j++)
+                    {
+                        Vector3 newPosition = Vector3.Lerp(points[i], nextPoint, (float)j / (float)(NumPoints + 1));
+                        Instantiate(coneType, newPosition, Quaternion.identity);
+                    }
+                }
+            }
         }
 
         private Mesh CreateWallMesh(List<Vector3> points) {

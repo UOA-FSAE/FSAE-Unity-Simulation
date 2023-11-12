@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.44657832, g: 0.49641222, b: 0.57481664, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657898, g: 0.4964133, b: 0.5748178, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -380,6 +380,10 @@ MonoBehaviour:
   numberOfCarsInSimulation: 1
   listOfCars: []
   yamlFile: {fileID: 4900000, guid: 997b8b9f9455d89a7b608ea157662f07, type: 3}
+  GenerateCones: 1
+  coneLeft: {fileID: 160334, guid: 168d3e97710948a4499b7b22b938e38e, type: 3}
+  coneRight: {fileID: 160334, guid: 31d90c9283d26ac41ad9d745bffd3d2d, type: 3}
+  desiredDistance: 1.5
 --- !u!114 &1895418216
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -414,7 +418,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ae6cccbb81ff3db0386dfb24ec419577, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  voronoiFoldOut: 0
+  voronoiFoldOut: 1
   displayVoronoi: 0
   splineCellCount: 4
   siteCount: 100
