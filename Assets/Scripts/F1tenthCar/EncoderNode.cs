@@ -21,7 +21,7 @@ namespace Car {
         private void Update() {
             if (!imuSensor) return;
             velocityMessage.Data = Convert.ToDouble(imuSensor.localVelocity.z);
-            Debug.Log(velocityMessage.Data);
+            // Debug.Log(velocityMessage.Data);
             velocityPublisher.Publish(velocityMessage);
         }
 
@@ -37,7 +37,7 @@ namespace Car {
                 Debug.Log($"{carController.carName}EncoderNode has failed to find to Ros2 Core");
                 return false;
             }
-            Debug.Log("Encoder node online");
+            // Debug.Log("Encoder node online");
             ros2Node = ros2UnityCore.CreateNode($"{carController.carName}EncoderNode");
             velocityPublisher = ros2Node.CreatePublisher<Float64>($"{carController.carName}/speed");
 
