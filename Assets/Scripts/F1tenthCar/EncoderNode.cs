@@ -8,6 +8,7 @@ using UnitySensors;
 namespace Car {
     [RequireComponent(typeof(CarController))]
     [RequireComponent(typeof(IMUSensor))]
+    [RequireComponent(typeof(Transform))]
     public class EncoderNode : MonoBehaviour {
         private CarController carController;
         private IMUSensor imuSensor;
@@ -19,8 +20,8 @@ namespace Car {
 
         private void Update() {
             if (!imuSensor) return;
-            velocityMessage.Data = Convert.ToDouble(imuSensor.velocity.sqrMagnitude);
-
+            velocityMessage.Data = Convert.ToDouble(imuSensor.localVelocity.z);
+            Debug.Log(velocityMessage.Data);
             velocityPublisher.Publish(velocityMessage);
         }
 
