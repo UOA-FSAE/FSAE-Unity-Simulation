@@ -88,6 +88,9 @@ public class CarController : MonoBehaviour {
 
         imuNode.Config();
         imuNode.SpinUp();
+
+        coneDetectionPublisher.Config();
+        coneDetectionPublisher.SpinUp();
     }
 
     public bool SetCurrentSetThrottle(float newSetThrottle) {

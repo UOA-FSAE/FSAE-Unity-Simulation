@@ -191,6 +191,10 @@ MonoBehaviour:
   trackWallMaterial: {fileID: 2100000, guid: 628567cc4ac3c5628872c6a6b7651ff9, type: 2}
   randomSeed: 0
   trackPoints: []
+  GenerateCones: 1
+  coneLeft: {fileID: 160334, guid: 168d3e97710948a4499b7b22b938e38e, type: 3}
+  coneRight: {fileID: 160334, guid: 31d90c9283d26ac41ad9d745bffd3d2d, type: 3}
+  desiredDistance: 3
 --- !u!114 &58497711
 MonoBehaviour:
   m_ObjectHideFlags: 0
