@@ -108,7 +108,7 @@ public class ConeDetectionPublisher : MonoBehaviour
         Cone Car_Cone = pack_to_cone_msg(Car_Position, Car_Orientation, 0);
         output_cone_map.Cones[0] = Car_Cone;
         
-        Debug.Log(Car_Position);
+        //Debug.Log(Car_Position);
         //Debug.Log(Car_Orientation);
 
         int index = 1;
@@ -144,6 +144,7 @@ public class ConeDetectionPublisher : MonoBehaviour
         output.Pose.Pose.Orientation.X = 0;
         output.Pose.Pose.Orientation.Y = 0;
         output.Pose.Pose.Orientation.Z = 0;
+        // Make angle range from -pi to pi
         output.Pose.Pose.Orientation.W = rotation.eulerAngles[2] * 2 * Mathf.PI / 360;
         output.Pose.Pose.Position.X = position.x;
         output.Pose.Pose.Position.Y = position.y;
