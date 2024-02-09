@@ -109,7 +109,7 @@ public class ConeDetectionPublisher : MonoBehaviour
         output_cone_map.Cones[0] = Car_Cone;
         
         Debug.Log(Car_Position);
-        Debug.Log(Car_Orientation);
+        //Debug.Log(Car_Orientation);
 
         int index = 1;
         foreach (Vector3 cone in left_cones)
@@ -139,12 +139,12 @@ public class ConeDetectionPublisher : MonoBehaviour
             output.Colour = 3;
         }
 
-        Quaternion rotate90 = Quaternion.Euler(0, 0, 0);
-        
-        output.Pose.Pose.Orientation.X = (rotation * rotate90).x;
-        output.Pose.Pose.Orientation.Y = (rotation * rotate90).y;
-        output.Pose.Pose.Orientation.Z = (rotation * rotate90).z;
-        output.Pose.Pose.Orientation.W = (rotation * rotate90).w;
+        //Quaternion rotate90 = Quaternion.Euler(0, 0, 0);
+        // The following need to change later since only w is used in cone map
+        output.Pose.Pose.Orientation.X = 0;
+        output.Pose.Pose.Orientation.Y = 0;
+        output.Pose.Pose.Orientation.Z = 0;
+        output.Pose.Pose.Orientation.W = rotation.eulerAngles[2] * 2 * Mathf.PI / 360;
         output.Pose.Pose.Position.X = position.x;
         output.Pose.Pose.Position.Y = position.y;
         output.Pose.Pose.Position.Z = position.z;
