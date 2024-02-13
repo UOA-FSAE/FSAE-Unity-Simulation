@@ -28,6 +28,9 @@ namespace Autonomous {
         private Mesh rightEdgeWallMesh;
         
         public List<Vector3> trackPoints;
+        
+        private List<Vector3> leftConePositions = new List<Vector3>(); // To store left cone positions
+        private List<Vector3> rightConePositions = new List<Vector3>(); // To store right cone positions
 
         [SerializeField]
         private bool GenerateCones = false;
@@ -77,8 +80,8 @@ namespace Autonomous {
             leftEdgeWallMesh = MakeDoubleSided(leftEdgeWallMesh);
             rightEdgeWallMesh = CreateWallMesh(rightEdge);
             rightEdgeWallMesh = MakeDoubleSided(rightEdgeWallMesh);
-            CreatCones(leftEdge, coneLeft);
-            CreatCones(rightEdge, coneRight);
+            CreatCones(leftEdge, coneLeft, true);
+            CreatCones(rightEdge, coneRight, false);
 
             leftEdgeChild = CreateOrUpdateChildWithMesh("LeftEdgeChild", leftEdgeWallMesh, leftEdgeChild);
             rightEdgeChild = CreateOrUpdateChildWithMesh("RightEdgeChild", rightEdgeWallMesh, rightEdgeChild);
@@ -129,7 +132,7 @@ namespace Autonomous {
             Debug.DrawLine(spline.Last(), spline[0], colour);
         }
 
-        private void CreatCones(List<Vector3> points, GameObject coneType)
+        private void CreatCones(List<Vector3> points, GameObject coneType, bool is_left)
         {
             //Check if user want cones
             if (!GenerateCones)
@@ -142,7 +145,7 @@ namespace Autonomous {
 
             for (var i = 0; i < points.Count; i++)
             {
-                //Get cone position based on spline genrator result
+                //Get cone position based on spline generator result
                 Vector3 nextPoint = points[(i + 1) % points.Count];
                 distance = Vector3.Distance(points[i], nextPoint);
 
@@ -159,7 +162,17 @@ namespace Autonomous {
                         continue;
                     }
                 }
-                Instantiate(coneType, points[i], Quaternion.identity);
+                GameObject cone = Instantiate(coneType, points[i], Quaternion.identity);
+                //store cone positions
+                if (is_left)
+                {
+                    leftConePositions.Add(cone.transform.position);
+                }
+                else
+                {
+                    rightConePositions.Add(cone.transform.position);
+                }
+                
                 canSkip = true;
 
                 // If distance between cones are too large, add more 
@@ -169,12 +182,24 @@ namespace Autonomous {
                     for (int j = 1; j <= NumPoints; j++)
                     {
                         Vector3 newPosition = Vector3.Lerp(points[i], nextPoint, (float)j / (float)(NumPoints + 1));
-                        Instantiate(coneType, newPosition, Quaternion.identity);
+                        cone = Instantiate(coneType, newPosition, Quaternion.identity);
+                        if (is_left)
+                        {
+                            leftConePositions.Add(cone.transform.position);
+                        }
+                        else
+                        {
+                            rightConePositions.Add(cone.transform.position);
+                        }
                     }
                 }
             }
         }
+        
+        // method to get cone positions 
 
+        public List<Vector3> GetLeftConePositions() => leftConePositions;
+        public List<Vector3> GetRightConePositions() => rightConePositions;
 
         private Mesh CreateWallMesh(List<Vector3> points) {
             var mesh = new Mesh();

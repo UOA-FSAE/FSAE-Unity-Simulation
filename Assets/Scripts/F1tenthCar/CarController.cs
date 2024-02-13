@@ -16,6 +16,8 @@ public class AxleInfo {
 [RequireComponent(typeof(IMUNode))]
 [RequireComponent(typeof(Rigidbody))]
 [RequireComponent(typeof(CarStats))]
+[RequireComponent(typeof(ConeDetectionPublisher))] // To also run ConeDetectionPublisher
+
 public class CarController : MonoBehaviour {
     /* TODO!: List of things need to be done for the Car to be finished
      * - Create Sensor node for Odom
@@ -42,12 +44,16 @@ public class CarController : MonoBehaviour {
     private LidarNode lidarNode;
     private EncoderNode encoderNode;
 
+    private ConeDetectionPublisher coneDetectionPublisher; // Reference to ConeDetectionPublisher script
+    
     private void Awake() {
         actionNode = GetComponent<ActionNode>();
         lidarNode = GetComponent<LidarNode>();
         imuNode = GetComponent<IMUNode>();
         encoderNode = GetComponent<EncoderNode>();
         carStats = GetComponent<CarStats>();
+        coneDetectionPublisher = GetComponent<ConeDetectionPublisher>(); // Assign the reference
+        coneDetectionPublisher.enabled = true;
         Debug.Log("Car created");
     }
 
@@ -85,6 +91,9 @@ public class CarController : MonoBehaviour {
         imuNode.Config();
         imuNode.SpinUp();
 
+        coneDetectionPublisher.Config();
+        coneDetectionPublisher.SpinUp();
+        
         encoderNode.Config();
         encoderNode.SpinUp();
     }
