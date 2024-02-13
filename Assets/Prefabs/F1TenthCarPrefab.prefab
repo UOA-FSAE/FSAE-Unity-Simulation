@@ -419,6 +419,7 @@ GameObject:
   - component: {fileID: 6622646432608870408}
   - component: {fileID: 3017475397656057721}
   - component: {fileID: 5135543087071786498}
+  - component: {fileID: 7362328677968390983}
   m_Layer: 0
   m_Name: F1TenthCarPrefab
   m_TagString: Untagged
@@ -487,6 +488,7 @@ MonoBehaviour:
   carName: test
   enableDebug: 1
   isReady: 0
+  isCollided: 0
   currentSetThrottle: 0
   currentSetSteeringAngle: 0
   axleInfos:
@@ -580,6 +582,18 @@ MonoBehaviour:
   carControllerType: 0
   position: 0
   trackProgress: 0
+--- !u!114 &7362328677968390983
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2075330910498187650}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 47f299fb52db4e6379370b923b9d1d93, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &2445654451573387996
 GameObject:
   m_ObjectHideFlags: 0

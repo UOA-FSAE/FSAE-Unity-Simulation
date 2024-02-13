@@ -42,6 +42,7 @@ public class CarController : MonoBehaviour {
     private ActionNode actionNode;
     private IMUNode imuNode;
     private LidarNode lidarNode;
+    private EncoderNode encoderNode;
 
     private ConeDetectionPublisher coneDetectionPublisher; // Reference to ConeDetectionPublisher script
     
@@ -49,10 +50,11 @@ public class CarController : MonoBehaviour {
         actionNode = GetComponent<ActionNode>();
         lidarNode = GetComponent<LidarNode>();
         imuNode = GetComponent<IMUNode>();
+        encoderNode = GetComponent<EncoderNode>();
         carStats = GetComponent<CarStats>();
         coneDetectionPublisher = GetComponent<ConeDetectionPublisher>(); // Assign the reference
-        
         coneDetectionPublisher.enabled = true;
+        Debug.Log("Car created");
     }
 
     private void Update() { }
@@ -91,6 +93,9 @@ public class CarController : MonoBehaviour {
 
         coneDetectionPublisher.Config();
         coneDetectionPublisher.SpinUp();
+        
+        encoderNode.Config();
+        encoderNode.SpinUp();
     }
 
     public bool SetCurrentSetThrottle(float newSetThrottle) {
