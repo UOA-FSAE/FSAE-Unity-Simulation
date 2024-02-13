@@ -40,12 +40,15 @@ public class CarController : MonoBehaviour {
     private ActionNode actionNode;
     private IMUNode imuNode;
     private LidarNode lidarNode;
+    private EncoderNode encoderNode;
 
     private void Awake() {
         actionNode = GetComponent<ActionNode>();
         lidarNode = GetComponent<LidarNode>();
         imuNode = GetComponent<IMUNode>();
+        encoderNode = GetComponent<EncoderNode>();
         carStats = GetComponent<CarStats>();
+        Debug.Log("Car created");
     }
 
     private void Update() { }
@@ -81,6 +84,9 @@ public class CarController : MonoBehaviour {
 
         imuNode.Config();
         imuNode.SpinUp();
+
+        encoderNode.Config();
+        encoderNode.SpinUp();
     }
 
     public bool SetCurrentSetThrottle(float newSetThrottle) {
