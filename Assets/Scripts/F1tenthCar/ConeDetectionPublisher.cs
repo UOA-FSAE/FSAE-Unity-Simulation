@@ -120,7 +120,7 @@ public class ConeDetectionPublisher : MonoBehaviour
         
         foreach (Vector3 cone in right_cones)
         {
-            output_cone_map.Cones[index] = pack_to_cone_msg(normalize_cone_position(cone), new Quaternion(), 3);
+            output_cone_map.Cones[index] = pack_to_cone_msg(normalize_cone_position(cone), new Quaternion(), 2);
             index++;
         }
         
@@ -134,9 +134,9 @@ public class ConeDetectionPublisher : MonoBehaviour
         {
             output.Colour = 0;
         }
-        else if (cone_type == 3)
+        else if (cone_type == 2)
         {
-            output.Colour = 3;
+            output.Colour = 2;
         }
 
         //Quaternion rotate90 = Quaternion.Euler(0, 0, 0);
