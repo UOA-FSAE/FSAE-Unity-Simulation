@@ -87,7 +87,7 @@ public class ConeDetectionPublisher : MonoBehaviour
             Vector3 relativePos = carTransform.InverseTransformPoint(conePos); // method transforms world space position into local space relative to the car
             
             // Check if the cone is in front of the car 
-            if (relativePos.z > 0 && relativePos.magnitude < 100)  // forward direction is along positive z-axis with limited distance
+            if (relativePos.z > 0 && relativePos.magnitude < 50)  // forward direction is along positive z-axis with limited distance
             {
                 filteredCones.Add(relativePos);
             }
@@ -98,7 +98,7 @@ public class ConeDetectionPublisher : MonoBehaviour
     }
     private ConeMap get_packed_ConeMap_message(List<Vector3> left_cones, List<Vector3> right_cones, Transform carTransform)
     {
-        // cone_type: 0 for blue, 3 for yellow
+        // cone_type: 0 for blue, 2 for yellow
         ConeMap output_cone_map = new ConeMap();
         Cone[] list_of_cones = new Cone[1 + left_cones.Count + right_cones.Count];
         output_cone_map.Cones = list_of_cones;
