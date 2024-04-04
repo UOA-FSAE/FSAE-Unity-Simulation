@@ -76,6 +76,10 @@ A likely reason is that the ROS Domain IDs don't match. Unity uses ROS Domain ID
 ```
 export ROS_DOMAIN_ID=0
 ```
+Some members also find launching Unityhub from terminal can be helpful
+```
+unityhub
+```
 ## 5. Visualize Data
 1. Open Foxglove, click open connections -> Foxglove Web Socket -> Open.
 2. Click on the Panel Tab -> Topics
