@@ -12,6 +12,7 @@ namespace Autonomous.Nodes {
         private IPublisher<RaceStats> raceStatsPublisher;
         private ISubscription<String> resetSubscription;
         private ISubscription<String> createSubscription;
+        private ISubscription<String> deleteSubscription;
         
         public bool Config(RaceController parentRaceController) {
             raceController = parentRaceController;
@@ -31,6 +32,7 @@ namespace Autonomous.Nodes {
             
             resetSubscription = ros2Node.CreateSubscription<String>("race_controller/reset", ResetCarCallback);
             createSubscription = ros2Node.CreateSubscription<String>("race_controller/create", CreateCarCallback);
+            deleteSubscription = ros2Node.CreateSubscription<String>("race_controller/delete", DeleteCarCallback);
             
             return true;
         }
@@ -38,6 +40,7 @@ namespace Autonomous.Nodes {
         public void PublishRaceStats(RaceStats raceStats) => raceStatsPublisher.Publish(raceStats);
         private void CreateCarCallback(String msg) => raceController.carCreateQueue.Enqueue(msg.Data);
         private void ResetCarCallback(String msg) => raceController.carResetQueue.Enqueue(msg.Data);
+        private void DeleteCarCallback(String msg) => raceController.carDeleteQueue.Enqueue(msg.Data);
 
     }
 }

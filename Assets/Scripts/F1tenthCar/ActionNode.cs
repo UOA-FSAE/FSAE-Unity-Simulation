@@ -9,7 +9,7 @@ public class ActionNode : MonoBehaviour {
     private ROS2Node ros2Node;
 
     // ROS2
-    private readonly ROS2UnityCore ros2UnityCore = new();
+    private ROS2UnityCore ros2UnityCore = new();
     private ISubscription<Float32> subscriptionCmdSteering;
     private ISubscription<Float32> subscriptionCmdThrottle;
     private ISubscription<Bool> subscriptionReadyUp;
@@ -52,5 +52,13 @@ public class ActionNode : MonoBehaviour {
 
     private void readyup_callback(Bool msg) {
         carController.isReady = msg.Data;
+    }
+
+    public void spin_down() {
+        ros2Node.RemoveSubscription<Float32>(subscriptionCmdSteering);
+        ros2Node.RemoveSubscription<Float32>(subscriptionCmdThrottle);
+        ros2Node.RemoveSubscription<Bool>(subscriptionReadyUp);
+        ros2UnityCore.RemoveNode(ros2Node);
+        Debug.Log($"{carController.carName}ActionNode has been removed");
     }
 }

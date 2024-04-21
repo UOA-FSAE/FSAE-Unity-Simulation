@@ -61,6 +61,8 @@ public class LidarNode : MonoBehaviour {
 
         return true;
     }
+    
+
 
     private void DrawDebugThings() {
         // Debug draw lidar lines

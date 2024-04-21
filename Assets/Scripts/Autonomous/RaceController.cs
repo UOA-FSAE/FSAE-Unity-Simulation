@@ -15,6 +15,7 @@ namespace Autonomous {
         public int maxNumberOfCarsInSim = 10;
         public CarQueue<string> carResetQueue = new();
         public CarQueue<string> carCreateQueue = new();
+        public CarQueue<string> carDeleteQueue = new();
 
         private List<CarController> listOfCars = new();
         
@@ -33,6 +34,8 @@ namespace Autonomous {
                 SpawnCar(carCreateQueue.Dequeue());
             if (carResetQueue.Count > 0) 
                 ResetCar(carResetQueue.Dequeue());
+            if (carDeleteQueue.Count > 0)
+                DeleteCar(carDeleteQueue.Dequeue());
         }
 
         private void ResetCar(string carConfig) {
@@ -43,6 +46,12 @@ namespace Autonomous {
             var position = TrackMeasurer.GetPositionOnSpline(trackController.trackPoints, percent_around_track, out var rotation);
             car.transform.position = position;
             car.transform.rotation = rotation;
+        }
+
+        private void DeleteCar(string carConfig) {
+            var car = listOfCars.Where(car => car.carName == carConfig).ToList()[0];
+            Destroy(car.gameObject);
+            listOfCars.RemoveAll(car => car.carName == carConfig);
         }
 
         private void SpawnCar(string carConfig) {

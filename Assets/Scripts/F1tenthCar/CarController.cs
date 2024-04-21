@@ -131,4 +131,13 @@ public class CarController : MonoBehaviour {
     private void OnCollisionExit(Collision other) {
         isCollided = false;
     }
+
+    // make on destroy
+    private void OnDestroy() {
+        // spindown for each node
+        actionNode.spin_down();
+        //lidarNode.spin_down();
+        //imuNode.SpinDown();
+        //encoderNode.SpinDown();
+    }
 }
