@@ -136,8 +136,9 @@ public class CarController : MonoBehaviour {
     private void OnDestroy() {
         // spindown for each node
         actionNode.spin_down();
-        //lidarNode.spin_down();
-        //imuNode.SpinDown();
-        //encoderNode.SpinDown();
+        lidarNode.spin_down();
+        imuNode.SpinDown();
+        encoderNode.SpinDown();
+        coneDetectionPublisher.SpinDown();
     }
 }

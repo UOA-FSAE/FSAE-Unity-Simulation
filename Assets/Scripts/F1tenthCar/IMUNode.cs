@@ -56,6 +56,10 @@ namespace Car {
             return true;
         }
 
-    
+        public void SpinDown() {
+            ros2Node.RemovePublisher<Imu>(publisherImu);
+            ROS2.Ros2cs.RemoveNode(ros2Node.node);
+            Debug.Log($"{carController.carName}ImuNode has been removed");
+        }
     }
 }

@@ -9,7 +9,7 @@ public class ActionNode : MonoBehaviour {
     private ROS2Node ros2Node;
 
     // ROS2
-    private ROS2UnityCore ros2UnityCore = new();
+    private readonly ROS2UnityCore ros2UnityCore = new();
     private ISubscription<Float32> subscriptionCmdSteering;
     private ISubscription<Float32> subscriptionCmdThrottle;
     private ISubscription<Bool> subscriptionReadyUp;
@@ -34,12 +34,16 @@ public class ActionNode : MonoBehaviour {
             $"{carController.carName}/cmd_steering",
             steering_callback
         );
-        subscriptionCmdSteering = ros2Node.CreateSubscription<Float32>(
-            $"{carController.carName}/cmd_steering",
-            steering_callback
-        );
 
         return true;
+    }
+
+    public void spin_down() {
+        ros2Node.RemoveSubscription<Float32>(subscriptionCmdSteering);
+        ros2Node.RemoveSubscription<Float32>(subscriptionCmdThrottle);
+        ros2Node.RemoveSubscription<Bool>(subscriptionReadyUp);
+        ROS2.Ros2cs.RemoveNode(ros2Node.node);
+        Debug.Log($"{carController.carName}ActionNode has been removed");
     }
 
     private void throttle_callback(Float32 msg) {
@@ -54,11 +58,5 @@ public class ActionNode : MonoBehaviour {
         carController.isReady = msg.Data;
     }
 
-    public void spin_down() {
-        ros2Node.RemoveSubscription<Float32>(subscriptionCmdSteering);
-        ros2Node.RemoveSubscription<Float32>(subscriptionCmdThrottle);
-        ros2Node.RemoveSubscription<Bool>(subscriptionReadyUp);
-        ros2UnityCore.RemoveNode(ros2Node);
-        Debug.Log($"{carController.carName}ActionNode has been removed");
-    }
+    
 }

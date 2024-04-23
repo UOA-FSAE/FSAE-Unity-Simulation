@@ -62,6 +62,11 @@ public class LidarNode : MonoBehaviour {
         return true;
     }
     
+    public void spin_down() {
+        ros2Node.RemovePublisher<LaserScan>(publisherLidarLaserScan);
+        ROS2.Ros2cs.RemoveNode(ros2Node.node);
+        Debug.Log($"{carController.carName}LidarNode has been removed");
+    }
 
 
     private void DrawDebugThings() {

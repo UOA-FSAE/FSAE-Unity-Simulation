@@ -61,6 +61,14 @@ public class ConeDetectionPublisher : MonoBehaviour
         Debug.Log("Cameara Publisher established");
         return true;
     }
+
+    public void SpinDown() {
+        ros2Node.RemovePublisher<ConeMap>(cone_detection_pub);
+        // delete node
+        ROS2.Ros2cs.RemoveNode(ros2Node.node);
+        Debug.Log($"{carController.carName}CameraNode has been removed");
+    }
+
     public void FixedUpdate()
     {
         PublishConePositions(LeftConePositions, RightConePositions);
