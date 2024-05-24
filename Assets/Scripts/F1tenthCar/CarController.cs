@@ -16,6 +16,8 @@ public class AxleInfo {
 [RequireComponent(typeof(IMUNode))]
 [RequireComponent(typeof(Rigidbody))]
 [RequireComponent(typeof(CarStats))]
+[RequireComponent(typeof(ConeDetectionPublisher))] // To also run ConeDetectionPublisher
+
 public class CarController : MonoBehaviour {
     /* TODO!: List of things need to be done for the Car to be finished
      * - Create Sensor node for Odom
@@ -27,6 +29,7 @@ public class CarController : MonoBehaviour {
     public string carName;
     public bool enableDebug;
     public bool isReady;
+    public bool isCollided = false;
     [SerializeField] private float currentSetThrottle;
     [SerializeField] private float currentSetSteeringAngle;
 
@@ -39,12 +42,19 @@ public class CarController : MonoBehaviour {
     private ActionNode actionNode;
     private IMUNode imuNode;
     private LidarNode lidarNode;
+    private EncoderNode encoderNode;
 
+    private ConeDetectionPublisher coneDetectionPublisher; // Reference to ConeDetectionPublisher script
+    
     private void Awake() {
         actionNode = GetComponent<ActionNode>();
         lidarNode = GetComponent<LidarNode>();
         imuNode = GetComponent<IMUNode>();
+        encoderNode = GetComponent<EncoderNode>();
         carStats = GetComponent<CarStats>();
+        coneDetectionPublisher = GetComponent<ConeDetectionPublisher>(); // Assign the reference
+        coneDetectionPublisher.enabled = true;
+        Debug.Log("Car created");
     }
 
     private void Update() { }
@@ -69,10 +79,8 @@ public class CarController : MonoBehaviour {
     }
 
     [ContextMenu("Config Car")]
-    public void Config(CarConfig config) {
-        carConfig = config;
-
-        carStats.Config(config);
+    public void Config(string config) {
+        carName = config;
 
         actionNode.Config();
         actionNode.spin_up();
@@ -82,6 +90,12 @@ public class CarController : MonoBehaviour {
 
         imuNode.Config();
         imuNode.SpinUp();
+
+        coneDetectionPublisher.Config();
+        coneDetectionPublisher.SpinUp();
+        
+        encoderNode.Config();
+        encoderNode.SpinUp();
     }
 
     public bool SetCurrentSetThrottle(float newSetThrottle) {
@@ -108,5 +122,13 @@ public class CarController : MonoBehaviour {
 
         visualWheel.transform.position = position;
         visualWheel.transform.rotation = rotation;
+    }
+
+    void OnCollisionEnter(Collision collision) {
+        isCollided = true;
+    }
+
+    private void OnCollisionExit(Collision other) {
+        isCollided = false;
     }
 }

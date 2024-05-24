@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 204e5cef92134e329f379ce0137cd04b
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - trackWallMaterial: {instanceID: 0}
+  - coneLeft: {fileID: 160334, guid: 168d3e97710948a4499b7b22b938e38e, type: 3}
+  - coneRight: {fileID: 160334, guid: 31d90c9283d26ac41ad9d745bffd3d2d, type: 3}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

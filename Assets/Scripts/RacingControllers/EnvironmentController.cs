@@ -25,7 +25,7 @@ namespace RacingControllers {
 
         public int randomSeed;
         public int currentTrackGenerationSeed;
-        public float trackThickness = 10f;
+        public float trackThickness = 3f;
         public float trackWallHeight = 3f;
         public Material trackWallMaterial;
         public CarController carPrefab;
@@ -37,7 +37,17 @@ namespace RacingControllers {
         private EnvironmentControllerNode environmentControllerNode;
         public Dictionary<string, string> yaml_data_dictionary;
 
-        private YamlData[] data; 
+        [SerializeField]
+        private bool GenerateCones = false;
+        public bool generateCones
+        { get { return GenerateCones; } set { GenerateCones = value; } }
+
+        public GameObject coneLeft;
+        public GameObject coneRight;
+        public float desiredDistance = 1.5f;
+
+        private YamlData[] data;
+        private bool canSkip = false;
         private List<Vector3> leftEdge;
         private GameObject leftEdgeChild;
         private Mesh leftEdgeWallMesh;
@@ -145,7 +155,7 @@ namespace RacingControllers {
             var position = GetPositionOnSpline(trackPoints, carConfig.startPercentLocation, out var rotation);
             var car = Instantiate(carPrefab, position, rotation);
             car.transform.localScale = new Vector3(carScale, carScale, carScale);
-            car.Config(carConfig);
+            car.Config(carConfig.carName);
             listOfCars.Add(car);
         }
 
@@ -165,6 +175,8 @@ namespace RacingControllers {
             leftEdgeWallMesh = MakeDoubleSided(leftEdgeWallMesh);
             rightEdgeWallMesh = HelperClass.CreateWallMesh(rightEdge, trackWallHeight);
             rightEdgeWallMesh = MakeDoubleSided(rightEdgeWallMesh);
+            CreatCones(leftEdge, coneLeft);
+            CreatCones(rightEdge, coneRight);
 
             leftEdgeChild = CreateOrUpdateChildWithMesh("LeftEdgeChild", leftEdgeWallMesh, leftEdgeChild);
             rightEdgeChild = CreateOrUpdateChildWithMesh("RightEdgeChild", rightEdgeWallMesh, rightEdgeChild);
@@ -213,6 +225,89 @@ namespace RacingControllers {
             Debug.DrawLine(spline.Last(), spline[0], colour);
         }
 
+        private void CreatCones(List<Vector3> points,GameObject coneType) {
+            //Check if user want cones
+            if (!GenerateCones)
+            {
+                return;
+            }
+
+            float distance;
+
+           
+            for (var i = 0; i < points.Count; i++)
+            {
+                //Get cone position based on spline genrator result
+                Vector3 nextPoint = points[(i + 1) % points.Count];
+                distance = Vector3.Distance(points[i], nextPoint);
+
+                //  If distance between cones are small and stacked together, skip some position
+                if (distance < 0.8)
+                {
+                    if(distance < 0.15)
+                    {
+                        continue;
+                    }
+                    else if(canSkip)
+                    {
+                        canSkip = false;
+                        continue;
+                    }
+                }
+                Instantiate(coneType, points[i], Quaternion.identity);
+                canSkip = true;
+
+                // If distance between cones are too large, add more 
+                if (distance > desiredDistance)
+                {
+                    int NumPoints = Mathf.FloorToInt(distance / desiredDistance) - 1;
+                    for (int j = 1; j <= NumPoints; j++)
+                    {
+                        Vector3 newPosition = Vector3.Lerp(points[i], nextPoint, (float)j / (float)(NumPoints + 1));
+                        Instantiate(coneType, newPosition, Quaternion.identity);
+                    }
+                }
+            }
+        }
+
+        private Mesh CreateWallMesh(List<Vector3> points) {
+            var mesh = new Mesh();
+
+            var vertices = new List<Vector3>();
+            var triangles = new List<int>();
+
+            for (var i = 0; i < points.Count; i++) {
+                // Add bottom vertex
+                vertices.Add(points[i]);
+
+                // Add top vertex
+                vertices.Add(new Vector3(points[i].x, points[i].y + trackWallHeight, points[i].z));
+            }
+
+            // Generate triangles
+            for (var i = 0; i < points.Count; i++) {
+                var bottomLeft = i * 2;
+                var topLeft = i * 2 + 1;
+                var bottomRight = (i + 1) % points.Count * 2; // Use modulo for looping
+                var topRight = (i + 1) % points.Count * 2 + 1; // Use modulo for looping
+
+                // First triangle
+                triangles.Add(bottomLeft);
+                triangles.Add(topRight);
+                triangles.Add(topLeft);
+
+                // Second triangle
+                triangles.Add(bottomLeft);
+                triangles.Add(bottomRight);
+                triangles.Add(topRight);
+            }
+
+            mesh.vertices = vertices.ToArray();
+            mesh.triangles = triangles.ToArray();
+            mesh.RecalculateNormals();
+
+            return mesh;
+        }
 
         private Vector3 GetPositionOnSpline(List<Vector3> spline, float percentage, out Quaternion rotation) {
             if (spline == null || spline.Count < 2) {
@@ -304,7 +399,16 @@ namespace RacingControllers {
             }
         }
 
-        
+        private static bool DoSegmentsIntersect(Vector3 p1, Vector3 p2, Vector3 p3, Vector3 p4) {
+            // Using determinant method to check for intersection
+            var det = (p2.x - p1.x) * (p4.z - p3.z) - (p2.z - p1.z) * (p4.x - p3.x);
+            if (det == 0) return false; // Parallel segments
+
+            var lambda = ((p4.z - p3.z) * (p4.x - p1.x) + (p3.x - p4.x) * (p4.z - p1.z)) / det;
+            var gamma = ((p1.z - p2.z) * (p4.x - p1.x) + (p2.x - p1.x) * (p4.z - p1.z)) / det;
+
+            return 0 < lambda && lambda < 1 && 0 < gamma && gamma < 1;
+        }
 
         private static List<Vector3> RemoveSelfIntersections(List<Vector3> spline) {
             for (var i = 0; i < spline.Count - 1; i++) {
