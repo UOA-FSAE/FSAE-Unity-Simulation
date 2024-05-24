@@ -8,7 +8,7 @@ using UnityEngine;
 using Random = UnityEngine.Random;
 
 
-public static class HelperClass{
+public static class MeshCreatorHelper{
     public static bool DoSegmentsIntersect(Vector3 p1, Vector3 p2, Vector3 p3, Vector3 p4) {
             // Using determinant method to check for intersection
             var det = (p2.x - p1.x) * (p4.z - p3.z) - (p2.z - p1.z) * (p4.x - p3.x);

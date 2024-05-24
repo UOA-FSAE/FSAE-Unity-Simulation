@@ -6,7 +6,7 @@ using Car;
 using YamlDotNet.Serialization;
 using UnityEngine;
 using Random = UnityEngine.Random;
-using static HelperClass;
+using static MeshCreatorHelper;
 
 [Serializable]
 public class YamlData
@@ -171,9 +171,9 @@ namespace RacingControllers {
         }
 
         private void CreateAndRenderWallMeshes() {
-            leftEdgeWallMesh = HelperClass.CreateWallMesh(leftEdge, trackWallHeight);
+            leftEdgeWallMesh = MeshCreatorHelper.CreateWallMesh(leftEdge, trackWallHeight);
             leftEdgeWallMesh = MakeDoubleSided(leftEdgeWallMesh);
-            rightEdgeWallMesh = HelperClass.CreateWallMesh(rightEdge, trackWallHeight);
+            rightEdgeWallMesh = MeshCreatorHelper.CreateWallMesh(rightEdge, trackWallHeight);
             rightEdgeWallMesh = MakeDoubleSided(rightEdgeWallMesh);
             CreatCones(leftEdge, coneLeft);
             CreatCones(rightEdge, coneRight);
@@ -413,7 +413,7 @@ namespace RacingControllers {
         private static List<Vector3> RemoveSelfIntersections(List<Vector3> spline) {
             for (var i = 0; i < spline.Count - 1; i++) {
                 for (var j = i + 2; j < spline.Count - 1; j++)
-                    if (HelperClass.DoSegmentsIntersect(spline[i], spline[i + 1], spline[j], spline[j + 1])) {
+                    if (MeshCreatorHelper.DoSegmentsIntersect(spline[i], spline[i + 1], spline[j], spline[j + 1])) {
                         // Remove points between i+1 and j
                         spline.RemoveRange(i + 1, j - i);
                         return RemoveSelfIntersections(spline); // Recursively clean up further intersections
